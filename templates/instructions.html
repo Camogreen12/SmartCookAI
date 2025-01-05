@@ -1047,7 +1047,7 @@
 
             /* Fix home button - make it static on mobile */
             .absolute.top-8.left-4 {
-                position: absolute !important;
+                position: absolute !important;  /* Changed from fixed to absolute */
                 top: 0.5rem !important;
                 left: 0.5rem !important;
                 z-index: 1000 !important;
@@ -1166,6 +1166,108 @@
                 z-index: 40 !important;
             }
         }
+
+        /* Mobile-specific loading screen styles */
+        @media (max-width: 768px) {
+            #loadingState {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            #loadingState .loading-spinner {
+                width: 2.5rem !important;
+                height: 2.5rem !important;
+                border-width: 3px !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            #loadingState .title-gradient {
+                font-size: 1.75rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            #loadingState p {
+                font-size: 1.25rem !important;
+                line-height: 1.4 !important;
+                max-width: 90% !important;
+                margin: 0 auto !important;
+            }
+        }
+
+        /* Desktop-specific title alignment */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header.text-center {
+                width: 100%;
+                max-width: 1000px;
+                margin-bottom: 2rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .title-gradient {
+                text-align: center;
+                width: 100%;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            #recipeTitle.subtitle-glow {
+                text-align: center;
+                width: 100%;
+                max-width: 1000px;
+                margin: 0.5rem auto;
+            }
+
+            .max-w-4xl {
+                width: 100%;
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            /* Adjust home button size and position for mobile */
+            .absolute.top-8.left-4 {
+                position: absolute !important;  /* Changed from fixed to absolute */
+                top: 0.5rem !important;
+                left: 0.5rem !important;
+                z-index: 1000 !important;
+            }
+
+            .absolute.top-8.left-4 .btn-outline {
+                padding: 0.3rem 0.75rem !important;
+                font-size: 0.9rem !important;
+                min-height: unset !important;
+                border-radius: 8px !important;
+                margin: 0 !important;
+            }
+        }
+
+        /* Desktop-specific styles */
+        @media (min-width: 769px) {
+            /* Keep home button fixed on desktop */
+            .absolute.top-8.left-4 {
+                position: fixed !important;
+                top: 2rem !important;
+                left: 1rem !important;
+                z-index: 1000 !important;
+            }
+        }
     </style>
     <script>
         // Add CORS headers for Eleven Labs
@@ -1186,8 +1288,8 @@
         </a>
     </div>
 
-    <div class="container mx-auto px-6 py-12">
-        <header class="text-center mb-8">
+    <div class="container mx-auto px-6">
+        <header class="text-center">
             <h1 class="text-6xl font-bold title-gradient">Cooking Instructions</h1>
             <p id="recipeTitle" class="subtitle-glow">Instructions for Steak</p>
         </header>

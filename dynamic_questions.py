@@ -17,11 +17,17 @@ You must respond with ONLY a JSON array of questions. Each question object must 
 
 REQUIRED INFORMATION TO GATHER (ask only what applies to the recipe):
 1. CRITICAL MEASUREMENTS that affect cooking time/temperature:
-   - For steaks: Thickness (e.g., 1 inch, 1.5 inches)
-   - For roasts: Weight and thickness
-   - For whole poultry: Weight
-   - For baked goods: Pan size and thickness
-   These measurements are REQUIRED when they affect cooking time/temperature
+   For steaks, ALWAYS use these exact thickness options:
+   - "½ inch (1.3 cm) - Extra thin"
+   - "¾ inch (1.9 cm) - Thin"
+   - "1 inch (2.5 cm) - Medium"
+   - "1½ inches (3.8 cm) - Thick"
+   - "2 inches (5.1 cm) - Extra thick"
+
+   For other meats/items, use these formats:
+   - For roasts: Weight ranges (e.g., "2-3 lbs (0.9-1.4 kg) - Small", "3-4 lbs (1.4-1.8 kg) - Medium")
+   - For chicken breasts: "¼ inch (6mm) - Thin", "½ inch (13mm) - Medium", "1 inch (25mm) - Thick"
+   - For baked goods: Standard pan sizes with dimensions
 
 2. Cooking method preference (e.g., deep frying, baking, air frying)
 
@@ -38,7 +44,7 @@ REQUIRED INFORMATION TO GATHER (ask only what applies to the recipe):
 
 RECIPE-SPECIFIC RULES:
 For Steak:
-- ALWAYS ask about thickness first (critical for achieving desired doneness)
+- ALWAYS ask about thickness first using the EXACT options listed above
 - Include doneness levels (rare to well done)
 - Ask about meat thermometer availability
 - Focus on cooking method
@@ -60,17 +66,23 @@ Format Guidelines:
 - Always include "Other" as the last option for choice questions
 - Make questions specific to the recipe type
 
-Example valid response for chicken wings:
+Example valid response for steak:
 [
     {{
-        "text": "What is your desired texture for the chicken wings?",
+        "text": "How thick is your steak?",
         "type": "choice",
-        "options": ["Extra Crispy", "Crispy outside, juicy inside", "Tender and juicy", "Other"]
+        "options": [
+            "½ inch (1.3 cm) - Extra thin",
+            "¾ inch (1.9 cm) - Thin",
+            "1 inch (2.5 cm) - Medium",
+            "1½ inches (3.8 cm) - Thick",
+            "2 inches (5.1 cm) - Extra thick"
+        ]
     }},
     {{
-        "text": "What is your preferred cooking method for the chicken wings?",
+        "text": "What is your preferred cooking method?",
         "type": "choice",
-        "options": ["Deep fried", "Baked", "Air fried", "Grilled", "Other"]
+        "options": ["Pan seared", "Grilled", "Broiled", "Sous vide", "Other"]
     }}
 ]
 
@@ -101,7 +113,8 @@ FOCUS ON:
 1. CRITICAL MEASUREMENTS:
    - Physical measurements that affect cooking time/temperature
    - These are REQUIRED for precise cooking instructions
-   - Examples: steak thickness, roast weight
+   - For steaks: ALWAYS use the exact thickness options provided
+   - For other items: Use the standardized measurement formats provided
 
 2. COOKING METHOD AND OUTCOME:
    - Preferred cooking method
@@ -114,7 +127,7 @@ FOCUS ON:
    - Equipment questions should be handled after method selection
 
 4. RECIPE-SPECIFIC CONSIDERATIONS:
-   - For steak: ALWAYS ask thickness, doneness, and thermometer availability
+   - For steak: ALWAYS ask thickness using exact options, then doneness and thermometer availability
    - For chicken: Focus on texture (never ask about doneness)
    - For baked goods: Ask pan size and oven type ONLY if baking is chosen
 
@@ -128,7 +141,7 @@ DO NOT ASK ABOUT:
 - Specific cooking times
 
 EXAMPLES OF GOOD QUESTIONS:
-✅ "How thick is your steak?" (with precise measurements)
+✅ "How thick is your steak?" (with exact thickness options)
 ✅ "What is your preferred cooking method?"
 ✅ "What level of doneness would you like?"
 ✅ "How crispy would you like your wings?"
