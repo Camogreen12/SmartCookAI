@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Questions - SmartCook AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -307,99 +307,52 @@
             display: inline-block;
         }
 
-        /* Mobile-specific styles */
+        /* Mobile-specific fixes for select elements */
         @media (max-width: 768px) {
-            .container {
+            select.input-field {
+                -webkit-appearance: menulist !important; /* Force native select appearance on mobile */
+                appearance: menulist !important;
+                background-image: none !important; /* Remove custom dropdown arrow */
+                padding: 0.8rem !important;
+                font-size: 16px !important; /* Prevent iOS zoom */
+                height: auto !important;
+                min-height: 45px !important;
+                background: rgba(41, 128, 185, 0.2) !important;
+                border: 2px solid rgba(255, 255, 255, 0.3) !important;
+            }
+
+            select.input-field option {
+                background: #2c3e50 !important;
+                color: white !important;
                 padding: 1rem !important;
+                font-size: 16px !important;
             }
 
             .card {
                 padding: 1rem !important;
-                margin-bottom: 0.75rem;
-                border-radius: 16px;
+                margin: 0.5rem 0 !important;
             }
 
             .question-text {
-                font-size: 1.2rem;
-                line-height: 1.4;
-                margin-bottom: 0.75rem;
+                font-size: 1.1rem !important;
+                margin-bottom: 0.8rem !important;
             }
 
-            select.input-field {
-                font-size: 1rem;
-                padding: 0.75rem !important;
-                padding-right: 2rem !important;
-                background-size: 1.2rem;
-                background-position: right 0.75rem center;
-                -webkit-tap-highlight-color: transparent;
-            }
-
-            select.input-field option {
-                font-size: 1rem;
-                padding: 0.75rem;
-            }
-
+            /* Improve touch targets */
             .btn-outline {
-                padding: 1rem 1.5rem;
-                font-size: 1rem;
-                width: 100%;
-                margin-top: 0.5rem;
-            }
-
-            .title-gradient {
-                font-size: 2rem !important;
-                line-height: 1.2;
-                margin-bottom: 1rem;
-            }
-
-            .subtitle-glow {
-                font-size: 1.2rem !important;
-            }
-
-            /* Fix touch events */
-            select, option, button {
-                cursor: pointer;
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
-
-            /* Increase touch target size */
-            select.input-field {
-                min-height: 48px;
-            }
-
-            /* Fix iOS select styling */
-            select.input-field {
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
-                background-color: rgba(41, 128, 185, 0.1);
-            }
-
-            /* Add active state for touch devices */
-            select.input-field:active,
-            button:active {
-                opacity: 0.8;
+                padding: 0.8rem 1.5rem !important;
+                margin: 0.5rem 0 !important;
+                min-height: 45px !important;
             }
         }
 
-        /* Fix for iOS select dropdowns */
-        select.input-field {
-            text-indent: 1px;
-            text-overflow: '';
-        }
-
-        /* Make options more touchable */
-        select.input-field option {
-            min-height: 44px;
-            padding: 12px;
-            white-space: normal;
-        }
-
-        /* Prevent zoom on focus for iOS */
+        /* iOS specific fixes */
         @supports (-webkit-touch-callout: none) {
-            select, input, textarea {
+            select.input-field {
                 font-size: 16px !important;
+                padding: 0.8rem !important;
+                -webkit-appearance: menulist !important;
+                appearance: menulist !important;
             }
         }
     </style>
@@ -454,7 +407,8 @@
                         <div class="w-full">
                             <select class="input-field w-full" 
                                     onchange="handleSelectChange(${index}, this.value)"
-                                    onfocus="this.blur()">
+                                    onclick="this.focus()"
+                                    ontouchstart="this.focus()">
                                 <option value="" disabled selected>Select an option</option>
                                 ${question.options ? question.options.map(opt => 
                                     opt.toLowerCase() === 'other' ? '' : 
@@ -473,6 +427,16 @@
                     </div>
                 </div>
             `).join('');
+
+            // Add touch event handlers for mobile
+            const selects = document.querySelectorAll('select.input-field');
+            selects.forEach(select => {
+                select.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.focus();
+                    this.click();
+                });
+            });
         }
 
         function handleSelectChange(index, value) {
@@ -539,23 +503,6 @@
                 document.getElementById('questionsContainer').classList.remove('hidden');
             }
         };
-
-        // Add touch event handlers
-        document.addEventListener('DOMContentLoaded', function() {
-            const selects = document.querySelectorAll('select');
-            selects.forEach(select => {
-                // Prevent default touch behavior
-                select.addEventListener('touchstart', function(e) {
-                    e.stopPropagation();
-                }, false);
-
-                // Handle focus
-                select.addEventListener('focus', function() {
-                    this.blur();
-                    this.focus();
-                });
-            });
-        });
     </script>
 </body>
 </html> 
