@@ -621,5 +621,38 @@ class ChefAssistant {
     }
 }
 
+// Add loading state management
+let isLoading = false;
+
+// Add global error handler for fetch requests
+async function fetchWithErrorHandling(url, options) {
+    try {
+        isLoading = true;
+        document.body.style.cursor = 'wait';
+        
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('API Error:', error);
+        // Show user-friendly error message
+        const errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            errorMessage.textContent = 'Something went wrong. Please try again.';
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+        throw error;
+    } finally {
+        isLoading = false;
+        document.body.style.cursor = 'default';
+    }
+}
+
 // Create and export the chef assistant instance
 window.chefAssistant = new ChefAssistant(); 
