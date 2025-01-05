@@ -716,23 +716,24 @@
         }
 
         /* Question section positioning */
-        .fixed.left-4.top-32 {
-            left: 20px;
-            width: 440px;
-            z-index: 30;
+        .question-section {
+            position: fixed;
+            left: 1rem;
+            top: 8rem;
+            width: 300px;
+            z-index: 10;
         }
 
-        /* Ingredients section positioning */
-        .fixed.right-4.top-32 {
-            right: 20px;
-            z-index: 30;
-        }
-
-        /* Ensure the question section doesn't overlap with bottom navigation */
-        @media screen and (max-height: 800px) {
-            .fixed.left-4.top-32 {
-                max-height: calc(100vh - 280px);
+        /* Mobile-specific layout fixes */
+        @media (max-width: 768px) {
+            .question-section {
+                position: static !important;
+                width: 100% !important;
+                margin-top: 2rem !important;
+                padding: 0 1rem !important;
             }
+
+            /* ... other mobile styles ... */
         }
 
         /* Loading state styles */
@@ -1151,8 +1152,8 @@
             </div>
         </div>
 
-        <!-- Left Side - Question Section (Moved below instructions) -->
-        <div class="mt-8 left-4 top-32" style="width: 100%;">
+        <!-- Left Side - Question Section -->
+        <div class="fixed left-4 top-32 question-section" style="width: 300px;">
             <button onclick="toggleQuestionInput()" 
                     id="askQuestionBtn"
                     class="btn-outline w-full mb-4 py-3 px-4 flex items-center justify-between">
