@@ -155,11 +155,23 @@ def ask_question_route():
     recipe_name = request.json.get('recipe_name')
     current_step = request.json.get('current_step', 0)
     instructions = request.json.get('instructions', [])
+    conversation_context = request.json.get('conversation_context', {})
+    is_general_question = request.json.get('is_general_question', False)
     
     if not all([question, recipe_name]):
         return jsonify({'status': 'error', 'message': 'Question and recipe name are required'})
     
-    result = answer_question(question, recipe_name, current_step, instructions)
+    # If it's a step-specific question, ensure we have the right context
+    if not is_general_question and current_step >= 0:
+        conversation_context = {
+            'current_step': current_step,
+            'last_discussed_step': current_step,
+            'last_topic': 'step_specific',
+            'last_action': instructions[current_step]['action'] if instructions and current_step < len(instructions) else None,
+            'is_discussing_step': True
+        }
+    
+    result = answer_question(question, recipe_name, current_step, instructions, conversation_context)
     return jsonify(result)
 
 @app.after_request

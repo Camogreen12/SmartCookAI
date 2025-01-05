@@ -1090,43 +1090,13 @@
     </div>
 
     <div class="container mx-auto px-6 py-12">
-        <header class="text-center mb-16">
+        <header class="text-center mb-8">
             <h1 class="text-6xl font-bold title-gradient">Cooking Instructions</h1>
             <p id="recipeTitle" class="subtitle-glow">Instructions for Steak</p>
         </header>
 
-        <!-- Left Side - Question Section -->
-        <div class="fixed left-4 top-32" style="width: 440px;">
-            <button onclick="toggleQuestionInput()" 
-                    id="askQuestionBtn"
-                    class="btn-outline w-full mb-4 py-3 px-4 flex items-center justify-between">
-                <span>Ask a Question</span>
-                <svg id="questionArrow" class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-            
-            <div id="questionInputSection" class="hidden">
-                <div style="background: rgba(41, 128, 185, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 1rem;">
-                    <input type="text" 
-                           id="questionInput"
-                           class="input-field"
-                           placeholder="Ask anything about the recipe...">
-                    <button onclick="askQuestion()"
-                            class="btn-outline w-full py-2 mt-4">
-                        Ask
-                    </button>
-                    <div id="answerContainer" class="mt-4 hidden">
-                        <div style="background: rgba(41, 128, 185, 0.1); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);">
-                            <p id="answerText" style="color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; line-height: 1.6; white-space: normal; width: 100%; word-break: break-word;"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Center - Main Content -->
-        <div class="max-w-4xl">
+        <!-- View Mode Buttons and Instructions - Moved to top -->
+        <div class="max-w-4xl mx-auto">
             <div id="loadingState" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#1e2a3a] via-[#2c3e50] to-[#2980b9] z-50">
                 <div class="loading-spinner"></div>
                 <p class="subtitle-glow">Generating cooking instructions...</p>
@@ -1177,6 +1147,36 @@
                             class="btn-outline">
                         Next Step
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Left Side - Question Section (Moved below instructions) -->
+        <div class="mt-8 left-4 top-32" style="width: 100%;">
+            <button onclick="toggleQuestionInput()" 
+                    id="askQuestionBtn"
+                    class="btn-outline w-full mb-4 py-3 px-4 flex items-center justify-between">
+                <span>Ask a Question</span>
+                <svg id="questionArrow" class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            
+            <div id="questionInputSection" class="hidden">
+                <div class="card">
+                    <input type="text" 
+                           id="questionInput"
+                           class="input-field"
+                           placeholder="Ask anything about the recipe...">
+                    <button onclick="askQuestion()"
+                            class="btn-outline w-full py-2 mt-4">
+                        Ask
+                    </button>
+                    <div id="answerContainer" class="mt-4 hidden">
+                        <div class="bg-opacity-10 bg-blue-500 rounded-lg p-4 border border-blue-200">
+                            <p id="answerText" class="text-white"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1550,7 +1550,15 @@
                         question,
                         recipe_name: sessionStorage.getItem('recipeName'),
                         current_step: stepIndex,
-                        instructions: instructions
+                        instructions: instructions,
+                        is_general_question: false,
+                        conversation_context: {
+                            current_step: stepIndex,
+                            last_discussed_step: stepIndex,
+                            last_topic: 'step_specific',
+                            last_action: instructions[stepIndex].action,
+                            is_discussing_step: true
+                        }
                     })
                 });
                 
@@ -1596,9 +1604,16 @@
                     body: JSON.stringify({
                         question,
                         recipe_name: sessionStorage.getItem('recipeName'),
-                        current_step: -1, // -1 indicates this is a general question
+                        current_step: -1,
                         instructions: instructions,
-                        is_general_question: true
+                        is_general_question: true,
+                        conversation_context: {
+                            current_step: -1,
+                            last_discussed_step: -1,
+                            last_topic: 'general',
+                            last_action: null,
+                            is_discussing_step: false
+                        }
                     })
                 });
                 
