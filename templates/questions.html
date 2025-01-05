@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Recipe Questions - SmartCook AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -306,6 +306,102 @@
             margin-bottom: 0.25rem;
             display: inline-block;
         }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem !important;
+            }
+
+            .card {
+                padding: 1rem !important;
+                margin-bottom: 0.75rem;
+                border-radius: 16px;
+            }
+
+            .question-text {
+                font-size: 1.2rem;
+                line-height: 1.4;
+                margin-bottom: 0.75rem;
+            }
+
+            select.input-field {
+                font-size: 1rem;
+                padding: 0.75rem !important;
+                padding-right: 2rem !important;
+                background-size: 1.2rem;
+                background-position: right 0.75rem center;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            select.input-field option {
+                font-size: 1rem;
+                padding: 0.75rem;
+            }
+
+            .btn-outline {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+
+            .title-gradient {
+                font-size: 2rem !important;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+
+            .subtitle-glow {
+                font-size: 1.2rem !important;
+            }
+
+            /* Fix touch events */
+            select, option, button {
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            /* Increase touch target size */
+            select.input-field {
+                min-height: 48px;
+            }
+
+            /* Fix iOS select styling */
+            select.input-field {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-color: rgba(41, 128, 185, 0.1);
+            }
+
+            /* Add active state for touch devices */
+            select.input-field:active,
+            button:active {
+                opacity: 0.8;
+            }
+        }
+
+        /* Fix for iOS select dropdowns */
+        select.input-field {
+            text-indent: 1px;
+            text-overflow: '';
+        }
+
+        /* Make options more touchable */
+        select.input-field option {
+            min-height: 44px;
+            padding: 12px;
+            white-space: normal;
+        }
+
+        /* Prevent zoom on focus for iOS */
+        @supports (-webkit-touch-callout: none) {
+            select, input, textarea {
+                font-size: 16px !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen text-white">
@@ -443,6 +539,23 @@
                 document.getElementById('questionsContainer').classList.remove('hidden');
             }
         };
+
+        // Add touch event handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                // Prevent default touch behavior
+                select.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                }, false);
+
+                // Handle focus
+                select.addEventListener('focus', function() {
+                    this.blur();
+                    this.focus();
+                });
+            });
+        });
     </script>
 </body>
 </html> 
