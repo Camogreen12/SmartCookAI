@@ -36,6 +36,7 @@ class ChefAssistant {
                 "Perfect! Let's continue with"
             ]
         };
+        this.viewMode = 'step'; // Track current view mode
         
         // Initialize speech recognition
         if ('webkitSpeechRecognition' in window) {
@@ -189,6 +190,7 @@ class ChefAssistant {
         this.currentInstructions = recipeData.instructions || window.instructions || [];
         this.currentStep = recipeData.currentStep || 0;
         this.recipeName = sessionStorage.getItem('recipeName') || 'your recipe';
+        this.viewMode = window.viewMode || 'step'; // Sync with window view mode
         const greeting = this.getRandomGreeting().replace('{recipeName}', this.recipeName);
         this.speak(greeting);
     }
@@ -251,6 +253,11 @@ class ChefAssistant {
             this.currentInstructions = window.instructions || [];
         }
 
+        // Sync current step with window state
+        if (window.viewMode === 'step') {
+            this.currentStep = window.currentStep || 0;
+        }
+
         // Handle "go back to step X" commands first
         if (command.match(/\b(go|going|get|let's go|lets go|take me|bring me)\s+back\s+to\s+step\s+\d+\b/i)) {
             const stepNumber = command.match(/\bstep\s+(\d+)\b/i);
@@ -258,6 +265,13 @@ class ChefAssistant {
                 const requestedStep = parseInt(stepNumber[1]) - 1; // Convert to 0-based index
                 if (requestedStep >= 0 && requestedStep < this.currentInstructions.length) {
                     this.currentStep = requestedStep;
+                    window.currentStep = requestedStep; // Sync with window state
+                    if (typeof window.setViewMode === 'function') {
+                        window.setViewMode('step'); // Switch to step view
+                    }
+                    if (typeof window.renderInstructions === 'function') {
+                        window.renderInstructions(); // Update display
+                    }
                     this.updateConversationContext(requestedStep, 'navigation', 'moved back to specific step');
                     this.explainCurrentStep();
                     return;
@@ -272,6 +286,13 @@ class ChefAssistant {
                 const requestedStep = parseInt(stepNumber[1]) - 1; // Convert to 0-based index
                 if (requestedStep >= 0 && requestedStep < this.currentInstructions.length) {
                     this.currentStep = requestedStep;
+                    window.currentStep = requestedStep; // Sync with window state
+                    if (typeof window.setViewMode === 'function') {
+                        window.setViewMode('step'); // Switch to step view
+                    }
+                    if (typeof window.renderInstructions === 'function') {
+                        window.renderInstructions(); // Update display
+                    }
                     this.updateConversationContext(requestedStep, 'explanation', 'explaining specific step');
                     this.explainCurrentStep();
                     return;
@@ -288,6 +309,13 @@ class ChefAssistant {
             if (currentStepToUse < this.currentInstructions.length - 1) {
                 const nextStep = currentStepToUse + 1;
                 this.currentStep = nextStep;
+                window.currentStep = nextStep; // Sync with window state
+                if (typeof window.setViewMode === 'function') {
+                    window.setViewMode('step'); // Switch to step view
+                }
+                if (typeof window.renderInstructions === 'function') {
+                    window.renderInstructions(); // Update display
+                }
                 this.updateConversationContext(nextStep, 'navigation', 'moved to next step');
                 this.speak(`${this.getRandomTransition()} step ${nextStep + 1}: ${this.currentInstructions[nextStep].action}`);
             } else {
@@ -305,6 +333,13 @@ class ChefAssistant {
             if (currentStepToUse > 0) {
                 const prevStep = currentStepToUse - 1;
                 this.currentStep = prevStep;
+                window.currentStep = prevStep; // Sync with window state
+                if (typeof window.setViewMode === 'function') {
+                    window.setViewMode('step'); // Switch to step view
+                }
+                if (typeof window.renderInstructions === 'function') {
+                    window.renderInstructions(); // Update display
+                }
                 this.updateConversationContext(prevStep, 'navigation', 'moved to previous step');
                 this.speak(`Going back to step ${prevStep + 1}: ${this.currentInstructions[prevStep].action}`);
             } else {
