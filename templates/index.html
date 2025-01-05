@@ -14,15 +14,6 @@
             --bg-gradient-3: #2980b9;
         }
         
-        @keyframes flowStream {
-            0% {
-                transform: translateX(-50%) translateY(-50%) rotate(0deg);
-            }
-            100% {
-                transform: translateX(-50%) translateY(-50%) rotate(360deg);
-            }
-        }
-        
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(
@@ -30,113 +21,64 @@
                 var(--bg-gradient-1) 0%,
                 var(--bg-gradient-2) 50%,
                 var(--bg-gradient-3) 100%
-            );
+            ) fixed;
             min-height: 100vh;
             color: #f0f0f0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        body::before,
-        body::after {
-            content: '';
-            position: absolute;
-            width: 150vmax;
-            height: 150vmax;
-            top: 50%;
-            left: 50%;
-            background: linear-gradient(
-                45deg,
-                transparent 40%,
-                var(--bg-gradient-3) 45%,
-                var(--bg-gradient-2) 50%,
-                transparent 55%
-            );
-            opacity: 0.1;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        body::before {
-            animation: flowStream 20s linear infinite;
-        }
-
-        body::after {
-            animation: flowStream 15s linear infinite reverse;
-            opacity: 0.05;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
         .container {
-            position: relative;
-            z-index: 1;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
         }
+
         .card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 2.5rem !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            width: 100%;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.15);
-        }
+
         .card h2 {
-            font-family: 'Inter', sans-serif;
-            font-size: 2.5rem !important;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 1.5rem !important;
-            letter-spacing: -0.5px;
-            color: rgba(255, 255, 255, 0.95);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-        .card p {
             font-family: 'Playfair Display', serif;
-            font-size: 1.35rem !important;
-            line-height: 1.7;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-            letter-spacing: 0.02em;
-        }
-        .btn-outline {
-            border: 1px solid #005f99;
-            color: #005f99;
-            background: transparent;
-            text-shadow: 0 0 10px rgba(0, 95, 153, 0.3);
-            box-shadow: 0 0 15px rgba(0, 95, 153, 0.1);
+            font-size: 1.8rem;
             font-weight: 600;
-            border-radius: 8px;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.95);
         }
-        .btn-outline:hover {
-            background: #007acc;
-            border-color: #007acc;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(0, 122, 204, 0.2);
+
+        .card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
         }
+
         .title-gradient {
+            font-family: 'Playfair Display', serif;
             background: linear-gradient(to right, 
                 rgba(255, 255, 255, 1) 0%, 
-                rgba(235, 245, 255, 0.98) 20%,
-                rgba(190, 225, 255, 0.95) 40%,
-                rgba(145, 205, 255, 0.92) 60%,
-                rgba(100, 185, 255, 0.9) 80%,
-                rgba(65, 165, 255, 0.88) 100%
+                rgba(255, 255, 255, 0.98) 30%,
+                rgba(235, 245, 255, 0.96) 50%,
+                rgba(215, 235, 255, 0.94) 70%,
+                rgba(195, 225, 255, 0.92) 100%
             );
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
             font-weight: 800;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.02em;
         }
+
         .subtitle-glow {
             font-family: 'Playfair Display', serif;
             background: linear-gradient(to right,
@@ -152,6 +94,7 @@
             letter-spacing: 0.02em;
             font-size: 1.8rem;
         }
+
         .logo-container {
             width: 140px;
             height: 140px;
@@ -160,7 +103,9 @@
             align-items: center;
             justify-content: center;
             background: transparent;
+            margin: 0 auto;
         }
+
         .logo-image {
             width: 100%;
             height: 100%;
@@ -168,6 +113,7 @@
             position: relative;
             z-index: 3;
         }
+
         .logo-background {
             position: absolute;
             width: 100%;
@@ -176,6 +122,7 @@
             border-radius: 15%;
             z-index: 1;
         }
+
         .logo-glow {
             position: absolute;
             width: 100%;
@@ -189,11 +136,63 @@
                 0 0 60px rgba(41, 128, 185, 0.6),
                 0 0 90px rgba(41, 128, 185, 0.4);
         }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            header {
+                padding-top: 2rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            .title-gradient {
+                font-size: 3rem !important;
+                line-height: 1.2;
+                margin-bottom: 0.5rem;
+            }
+
+            .subtitle-glow {
+                font-size: 1.4rem !important;
+                line-height: 1.3;
+                padding: 0 1rem;
+            }
+
+            .logo-container {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .card h2 {
+                font-size: 1.5rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .card p {
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+
+            .grid {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 0.5rem;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen text-white">
     <div class="container mx-auto px-4 py-8">
-        <header class="text-center mb-24 pt-12">
+        <header class="text-center mb-16 pt-8">
             <!-- Logo -->
             <div class="mx-auto mb-8 flex justify-center">
                 <div class="logo-container">
@@ -202,11 +201,11 @@
                     <img src="/static/images/chef_ai_logo.png" alt="Chef AI Logo" class="logo-image">
                 </div>
             </div>
-            <h1 class="text-6xl mb-6 title-gradient">SmartCook AI</h1>
-            <p class="text-3xl mb-2 subtitle-glow">Your Intelligent Kitchen Assistant</p>
+            <h1 class="text-6xl mb-4 title-gradient">SmartCook AI</h1>
+            <p class="text-2xl subtitle-glow">Your Intelligent Kitchen Assistant</p>
         </header>
 
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
             <a href="/recipe_input" class="card text-left cursor-pointer">
                 <h2>I know what I want to cook</h2>
                 <p class="leading-relaxed">
@@ -222,14 +221,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth) * 100;
-            const y = (e.clientY / window.innerHeight) * 100;
-            document.documentElement.style.setProperty('--mouse-x', `${x}%`);
-            document.documentElement.style.setProperty('--mouse-y', `${y}%`);
-        });
-    </script>
 </body>
 </html> 

@@ -13,10 +13,10 @@ class ChefAssistant {
         this.minTimeBetweenResponses = 2000; // 2 seconds minimum between responses
         this.recipeName = '';
         this.conversationContext = {
-            lastDiscussedStep: 0,
-            lastTopic: '',
-            lastAction: '',
-            isDiscussingStep: false
+            isDiscussingStep: false,
+            lastDiscussedStep: -1,
+            lastTopic: null,
+            lastAction: null
         };
         this.personality = {
             name: 'Chef Josh',
@@ -36,7 +36,7 @@ class ChefAssistant {
                 "Perfect! Let's continue with"
             ]
         };
-        this.viewMode = 'step'; // Track current view mode
+        this.currentViewMode = 'step'; // Add tracking for view mode
         
         // Initialize speech recognition
         if ('webkitSpeechRecognition' in window) {
@@ -87,6 +87,14 @@ class ChefAssistant {
 
         // Set up periodic check for user engagement
         setInterval(() => this.checkUserEngagement(), 30000); // Check every 30 seconds
+
+        // Listen for view mode changes
+        document.getElementById('viewStepBtn')?.addEventListener('click', () => {
+            this.currentViewMode = 'step';
+        });
+        document.getElementById('viewAllBtn')?.addEventListener('click', () => {
+            this.currentViewMode = 'all';
+        });
     }
 
     isLikelyOwnVoice(command) {
@@ -106,82 +114,17 @@ class ChefAssistant {
     }
 
     async speak(text) {
-        try {
-            if (this.isSpeaking) {
-                console.log('Already speaking, cancelling current speech');
-                window.speechSynthesis.cancel();
-                if (this.currentAudio) {
-                    this.currentAudio.pause();
-                    this.currentAudio.currentTime = 0;
-                    this.currentAudio = null;
-                }
+        if (!this.isListening) return;
+
+        const currentViewMode = this.currentViewMode;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.onend = () => {
+            // Restore the view mode that was active before speaking
+            if (currentViewMode === 'all') {
+                document.getElementById('viewAllBtn').click();
             }
-
-            this.isSpeaking = true;
-            console.log('Using browser speech synthesis...');
-            
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 1.1;  // Slightly faster than default
-            utterance.pitch = 1;   // Normal pitch
-            utterance.volume = 1;  // Full volume
-
-            // Pre-load voices to ensure they're available
-            await new Promise((resolve) => {
-                if (window.speechSynthesis.getVoices().length > 0) {
-                    resolve();
-                } else {
-                    window.speechSynthesis.onvoiceschanged = () => resolve();
-                }
-            });
-
-            // Use a male voice if available
-            const voices = window.speechSynthesis.getVoices();
-            const maleVoice = voices.find(voice => 
-                voice.name.toLowerCase().includes('male') || 
-                voice.name.toLowerCase().includes('guy') ||
-                voice.name.toLowerCase().includes('david') ||
-                voice.name.toLowerCase().includes('james')
-            );
-            if (maleVoice) {
-                utterance.voice = maleVoice;
-            }
-
-            // Handle speech start
-            utterance.onstart = () => {
-                // Force volume to stay at maximum
-                utterance.volume = 1;
-            };
-
-            // Handle speech boundary (word/sentence breaks)
-            utterance.onboundary = () => {
-                // Maintain maximum volume throughout
-                utterance.volume = 1;
-            };
-
-            // Handle speech end
-            utterance.onend = () => {
-                this.isSpeaking = false;
-                this.lastSpeechTime = Date.now();
-            };
-
-            // Handle speech error
-            utterance.onerror = (e) => {
-                console.error('Speech synthesis error:', e);
-                this.isSpeaking = false;
-                this.lastSpeechTime = Date.now();
-            };
-
-            // Ensure speech synthesis is ready
-            window.speechSynthesis.cancel(); // Clear any pending speech
-            await new Promise(resolve => setTimeout(resolve, 100)); // Small delay to ensure clean state
-            window.speechSynthesis.speak(utterance);
-            return true;
-        } catch (error) {
-            console.error('Error with speech synthesis:', error);
-            this.isSpeaking = false;
-            this.lastSpeechTime = Date.now();
-            return false;
-        }
+        };
+        window.speechSynthesis.speak(utterance);
     }
 
     // Initialize with recipe data
@@ -190,7 +133,7 @@ class ChefAssistant {
         this.currentInstructions = recipeData.instructions || window.instructions || [];
         this.currentStep = recipeData.currentStep || 0;
         this.recipeName = sessionStorage.getItem('recipeName') || 'your recipe';
-        this.viewMode = window.viewMode || 'step'; // Sync with window view mode
+        this.currentViewMode = document.getElementById('viewStepBtn').classList.contains('active') ? 'step' : 'all';
         const greeting = this.getRandomGreeting().replace('{recipeName}', this.recipeName);
         this.speak(greeting);
     }
@@ -551,58 +494,24 @@ class ChefAssistant {
 
     // General question handling
     async answerGeneralQuestion(question) {
-        if (!this.isListening) {
-            return;
-        }
+        if (!this.isListening) return;
         
         try {
             if (!this.currentInstructions || this.currentInstructions.length === 0) {
                 this.currentInstructions = window.instructions || [];
             }
 
-            // Special handling for timing questions
-            if (question.toLowerCase().includes('how long') || 
-                question.toLowerCase().includes('timing') || 
-                question.toLowerCase().includes('minutes') || 
-                question.toLowerCase().includes('time')) {
-                
-                // If we're in a step context, use that step for timing questions
-                const stepToUse = this.conversationContext.isDiscussingStep ? 
-                    this.conversationContext.lastDiscussedStep : 
-                    this.currentStep;
-
-                const response = await fetch('/api/ask_question', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        question: question,
-                        recipe_name: sessionStorage.getItem('recipeName'),
-                        current_step: stepToUse,
-                        instructions: this.currentInstructions,
-                        is_general_question: false,  // Force step-specific context for timing
-                        conversation_context: {
-                            current_step: stepToUse,
-                            last_discussed_step: stepToUse,
-                            last_topic: 'timing',
-                            last_action: this.currentInstructions[stepToUse].action,
-                            is_timing_question: true
-                        }
-                    })
-                });
-
-                const data = await response.json();
-                if (data.status === 'success' && this.isListening) {
-                    this.speak(data.answer);
-                    return;
-                }
+            // Determine which step we're discussing
+            let stepToReference = -1;
+            const questionLower = question.toLowerCase();
+            
+            // Check if the question mentions a specific step
+            const stepMatch = questionLower.match(/step (\d+)/i);
+            if (stepMatch) {
+                stepToReference = parseInt(stepMatch[1]) - 1;
+            } else if (this.conversationContext.isDiscussingStep) {
+                stepToReference = this.conversationContext.lastDiscussedStep;
             }
-
-            // For non-timing questions, determine which step to reference
-            const stepToReference = this.conversationContext.isDiscussingStep ? 
-                this.conversationContext.lastDiscussedStep : 
-                -1;
 
             const response = await fetch('/api/ask_question', {
                 method: 'POST',
@@ -614,12 +523,13 @@ class ChefAssistant {
                     recipe_name: sessionStorage.getItem('recipeName'),
                     current_step: stepToReference,
                     instructions: this.currentInstructions,
-                    is_general_question: !this.conversationContext.isDiscussingStep,
+                    is_general_question: stepToReference === -1,
                     conversation_context: {
-                        current_step: this.currentStep,
-                        last_discussed_step: this.conversationContext.lastDiscussedStep,
-                        last_topic: this.conversationContext.lastTopic,
-                        last_action: this.conversationContext.lastAction
+                        current_step: stepToReference,
+                        last_discussed_step: stepToReference,
+                        last_topic: 'step_specific',
+                        last_action: stepToReference >= 0 ? this.currentInstructions[stepToReference].action : null,
+                        is_discussing_step: stepToReference >= 0
                     }
                 })
             });
@@ -627,9 +537,9 @@ class ChefAssistant {
             const data = await response.json();
             if (data.status === 'success' && this.isListening) {
                 this.speak(data.answer);
-                // Reset the discussion flag after answering unless it's clearly about the current step
-                if (!this.isQuestionRelatedToCurrentContext(question)) {
-                    this.conversationContext.isDiscussingStep = false;
+                if (stepToReference >= 0) {
+                    this.conversationContext.isDiscussingStep = true;
+                    this.conversationContext.lastDiscussedStep = stepToReference;
                 }
             } else if (this.isListening) {
                 this.speak("I'm sorry, I'm not sure about that. Could you try asking in a different way?");
@@ -637,7 +547,7 @@ class ChefAssistant {
         } catch (error) {
             console.error('Error:', error);
             if (this.isListening) {
-                this.speak("I apologize, but I'm having trouble answering that question right now.");
+                this.speak("I'm sorry, I encountered an error. Please try again.");
             }
         }
     }

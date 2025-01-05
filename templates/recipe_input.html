@@ -42,13 +42,6 @@
             margin: 2rem auto;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-            background: rgba(41, 128, 185, 0.15);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
         .input-field {
             font-family: 'Inter', sans-serif;
             font-weight: 500;
@@ -61,43 +54,34 @@
             padding: 1.5rem !important;
             border-radius: 16px;
             height: 70px;
-            width: 100%;
-            margin-top: 0.5rem;
-            letter-spacing: 0.02em;
         }
 
         .input-field:focus {
-            background: rgba(41, 128, 185, 0.15);
-            border-color: rgba(41, 128, 185, 0.5);
-            box-shadow: 0 0 40px rgba(41, 128, 185, 0.25);
             outline: none;
-            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .input-field::placeholder {
             color: rgba(255, 255, 255, 0.5);
-            font-size: 1.15rem;
         }
 
         .input-label {
             font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 1rem;
             display: block;
-            letter-spacing: 0.02em;
         }
 
         .input-sublabel {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 0.75rem;
             display: block;
-            line-height: 1.6;
-            letter-spacing: 0.02em;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.25rem;
         }
 
         .btn-outline {
@@ -146,17 +130,82 @@
             letter-spacing: 0.02em;
         }
 
-        .subtitle-glow {
-            background: linear-gradient(to right,
-                rgba(255, 255, 255, 0.98) 0%,
-                rgba(190, 225, 255, 0.95) 50%,
-                rgba(145, 205, 255, 0.92) 100%
-            );
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
-            font-weight: 500;
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto;
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+
+            /* Fix home button positioning */
+            .absolute.top-8.left-4 {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1000;
+            }
+
+            /* Adjust home button style */
+            .btn-outline.px-4.py-2 {
+                padding: 0.5rem 1rem !important;
+                font-size: 1rem !important;
+                background: rgba(41, 128, 185, 0.3);
+            }
+
+            /* Fix header spacing */
+            header.text-center {
+                padding-top: 4rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Adjust title size */
+            .text-7xl {
+                font-size: 2.5rem !important;
+                line-height: 1.2;
+                margin-bottom: 1.5rem;
+                padding: 0 1rem;
+            }
+
+            /* Adjust card styles */
+            .card {
+                min-height: unset;
+                padding: 1.5rem !important;
+                margin: 1rem 0.5rem;
+                border-radius: 16px;
+            }
+
+            /* Adjust input field styles */
+            .input-field {
+                font-size: 1rem;
+                padding: 1rem !important;
+                height: 50px;
+                border-radius: 12px;
+            }
+
+            /* Adjust label styles */
+            .input-label {
+                font-size: 1.3rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .input-sublabel {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            /* Adjust form group spacing */
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+
+            /* Ensure proper spacing for the entire page */
+            .mx-auto {
+                margin: 0 auto;
+                padding: 0 1rem;
+            }
         }
     </style>
 </head>
@@ -195,58 +244,52 @@
                     <input type="number" 
                            id="quantity" 
                            class="w-full input-field"
-                           placeholder="Enter quantity if applicable"
-                           min="1">
+                           placeholder="Enter quantity (optional)">
                 </div>
 
-                <div class="flex justify-center">
-                    <button onclick="proceed()" 
-                            class="btn-outline transition duration-300">
-                        Next
-                    </button>
-                </div>
+                <button onclick="submitRecipe()" 
+                        class="w-full btn-outline">
+                    Continue
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        function proceed() {
+        async function submitRecipe() {
             const recipeName = document.getElementById('recipeName').value.trim();
             const quantity = document.getElementById('quantity').value.trim();
             
             if (!recipeName) {
-                alert('Please enter what you would like to make');
+                alert('Please enter a recipe name');
                 return;
             }
             
-            // Combine quantity with recipe name if provided
-            const fullRecipeName = quantity ? `${quantity} ${recipeName}` : recipeName;
-            sessionStorage.setItem('recipeName', fullRecipeName);
-            window.location.href = '/ingredients';
-        }
-
-        // Allow Enter key to submit
-        document.getElementById('recipeName').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                proceed();
-            }
-        });
-
-        document.getElementById('quantity').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                proceed();
-            }
-        });
-
-        function submitRecipe() {
-            const recipeName = document.getElementById('recipeName').value.trim();
-            if (recipeName) {
-                // Clear any previously stored ingredients
-                sessionStorage.removeItem('storedIngredients');
-                sessionStorage.removeItem('ingredients');
-                // Store the new recipe name
-                sessionStorage.setItem('recipeName', recipeName);
-                window.location.href = '/ingredients';
+            sessionStorage.setItem('recipeName', recipeName);
+            sessionStorage.setItem('quantity', quantity);
+            
+            try {
+                const response = await fetch('/api/generate_ingredients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        recipe_name: recipeName,
+                        quantity: quantity
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    sessionStorage.setItem('ingredients', JSON.stringify(data.ingredients));
+                    window.location.href = '/ingredients';
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             }
         }
     </script>

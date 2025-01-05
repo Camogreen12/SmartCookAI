@@ -72,8 +72,26 @@ Your instructions MUST follow these STRICT rules:
 
 5. Include safety warnings and tips within the relevant steps.
 
-6. Use this format for each step:
-   1. [Complete, detailed instruction including all measurements, times, and temperatures]
+6. For steaks and similar meats, ALWAYS separate the cooking into two distinct phases:
+   Phase 1 - Initial Searing:
+   - First sear each side WITHOUT moving (3-4 minutes per side) to develop a crust
+   - Specify "without moving" during the searing phase
+   - Make this a separate, dedicated step
+
+   Phase 2 - Finishing/Internal Cooking:
+   - AFTER initial searing, start frequent flipping (every 30-45 seconds)
+   - Make this a separate, dedicated step
+   - Specify that this is to achieve desired internal temperature
+   - Include total expected time for this phase
+
+7. For ANY other step that involves additional cooking time:
+   - Specify if the food should be flipped/turned/rotated
+   - Include which side to cook on
+   - Specify total cooking time per side
+   - For doneness checks, specify which side to cook on
+
+8. Use this format for each step:
+   1. [Complete, detailed instruction including all measurements, times, temperatures, and specific cooking method]
    2. [Next complete, detailed instruction]
    (etc.)
 

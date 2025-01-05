@@ -307,52 +307,168 @@
             display: inline-block;
         }
 
-        /* Mobile-specific fixes for select elements */
+        /* Mobile-specific styles */
         @media (max-width: 768px) {
+            /* Fix container spacing */
+            .container {
+                padding: 0.5rem !important;
+                padding-top: 4rem !important;
+            }
+
+            /* Fix home button positioning */
+            .absolute.top-6.left-4 {
+                position: fixed;
+                top: 0.5rem;
+                left: 0.5rem;
+                z-index: 1000;
+                background: rgba(41, 128, 185, 0.2);
+                backdrop-filter: blur(10px);
+                border-radius: 12px;
+            }
+
+            /* Adjust home button style */
+            .btn-outline.px-4.py-2 {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem !important;
+                background: rgba(41, 128, 185, 0.3);
+                box-shadow: none !important;
+            }
+
+            /* Fix header spacing and text sizes */
+            header.text-center {
+                padding-top: 1rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            .text-6xl {
+                font-size: 2.2rem !important;
+                line-height: 1.2;
+                margin-bottom: 0.5rem;
+                padding: 0 0.5rem;
+            }
+
+            #recipeTitle {
+                font-size: 1.2rem !important;
+                padding: 0 1rem;
+                margin-top: 0.5rem !important;
+            }
+
+            /* Adjust card styles */
+            .card {
+                padding: 1rem !important;
+                margin: 0.75rem 0 !important;
+                border-radius: 16px;
+            }
+
+            /* Adjust question text */
+            .question-text {
+                font-size: 1.1rem !important;
+                line-height: 1.4 !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            /* Fix select field styles for mobile */
             select.input-field {
-                -webkit-appearance: menulist !important; /* Force native select appearance on mobile */
-                appearance: menulist !important;
-                background-image: none !important; /* Remove custom dropdown arrow */
-                padding: 0.8rem !important;
-                font-size: 16px !important; /* Prevent iOS zoom */
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+                font-size: 1rem !important;
+                padding: 0.75rem !important;
                 height: auto !important;
                 min-height: 45px !important;
-                background: rgba(41, 128, 185, 0.2) !important;
-                border: 2px solid rgba(255, 255, 255, 0.3) !important;
+                margin-bottom: 0.5rem !important;
+                background-color: rgba(41, 128, 185, 0.2) !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+                background-repeat: no-repeat !important;
+                background-position: right 1rem center !important;
+                background-size: 1.5rem !important;
+            }
+
+            /* Fix placeholder color and selection highlight */
+            select.input-field option[value=""][disabled] {
+                color: rgba(255, 255, 255, 0.5) !important;
+                background-color: transparent !important;
             }
 
             select.input-field option {
-                background: #2c3e50 !important;
+                background-color: #2c3e50 !important;
                 color: white !important;
-                padding: 1rem !important;
-                font-size: 16px !important;
+                padding: 0.75rem !important;
             }
 
-            .card {
-                padding: 1rem !important;
-                margin: 0.5rem 0 !important;
+            /* Remove default focus highlight */
+            select.input-field:focus {
+                outline: none !important;
             }
 
-            .question-text {
-                font-size: 1.1rem !important;
-                margin-bottom: 0.8rem !important;
-            }
-
-            /* Improve touch targets */
-            .btn-outline {
-                padding: 0.8rem 1.5rem !important;
-                margin: 0.5rem 0 !important;
+            /* Adjust custom input styles */
+            .custom-input {
+                font-size: 1rem !important;
+                padding: 0.75rem !important;
+                height: auto !important;
                 min-height: 45px !important;
+            }
+
+            /* Fix navigation buttons */
+            .flex.justify-between.mt-6 {
+                margin-top: 1.5rem !important;
+                padding: 0 0.5rem !important;
+                gap: 0.75rem !important;
+            }
+
+            .flex.justify-between.mt-6 .btn-outline {
+                padding: 0.75rem 1.25rem !important;
+                font-size: 1rem !important;
+                min-width: 100px !important;
+            }
+
+            /* Fix max width for better mobile layout */
+            .max-w-3xl {
+                max-width: 100% !important;
+                padding: 0 0.5rem;
+            }
+
+            /* Adjust loading state */
+            #loadingState {
+                padding: 1rem !important;
+            }
+
+            .loading-spinner {
+                height: 2rem !important;
+                width: 2rem !important;
+            }
+
+            /* Fix questions container spacing */
+            #questionsContainer {
+                margin-top: 0.5rem !important;
+            }
+
+            .space-y-3 > * + * {
+                margin-top: 0.75rem !important;
+            }
+
+            /* Ensure proper spacing between elements */
+            .flex.flex-col.gap-4 {
+                gap: 0.75rem !important;
+            }
+
+            /* Fix button hover states for touch devices */
+            .btn-outline:hover {
+                transform: none !important;
+            }
+
+            /* Ensure text doesn't overflow */
+            .card p, .card div {
+                word-break: break-word;
             }
         }
 
         /* iOS specific fixes */
         @supports (-webkit-touch-callout: none) {
             select.input-field {
-                font-size: 16px !important;
-                padding: 0.8rem !important;
-                -webkit-appearance: menulist !important;
-                appearance: menulist !important;
+                opacity: 1 !important;
+                -webkit-tap-highlight-color: transparent !important;
             }
         }
     </style>
@@ -407,8 +523,8 @@
                         <div class="w-full">
                             <select class="input-field w-full" 
                                     onchange="handleSelectChange(${index}, this.value)"
-                                    onclick="this.focus()"
-                                    ontouchstart="this.focus()">
+                                    onclick="handleSelectClick(this)"
+                                    ontouchend="handleSelectTouch(event, this)">
                                 <option value="" disabled selected>Select an option</option>
                                 ${question.options ? question.options.map(opt => 
                                     opt.toLowerCase() === 'other' ? '' : 
@@ -503,6 +619,25 @@
                 document.getElementById('questionsContainer').classList.remove('hidden');
             }
         };
+
+        // New functions to handle select interactions
+        function handleSelectClick(element) {
+            // Only for desktop
+            if (window.innerWidth > 768) {
+                element.focus();
+            }
+        }
+
+        function handleSelectTouch(event, element) {
+            // Only for mobile
+            if (window.innerWidth <= 768) {
+                event.preventDefault();
+                element.focus();
+                // Trigger the native select dropdown
+                const event = new MouseEvent('mousedown');
+                element.dispatchEvent(event);
+            }
+        }
     </script>
 </body>
 </html> 

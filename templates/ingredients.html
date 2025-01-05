@@ -216,6 +216,109 @@
             border-color: rgba(41, 128, 185, 0.3);
             border-top-color: rgba(41, 128, 185, 0.9);
         }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            /* Fix container spacing */
+            .container {
+                padding: 0.5rem !important;
+                margin-top: 3rem !important;
+            }
+
+            /* Fix home button positioning */
+            .absolute.top-8.left-4 {
+                position: fixed;
+                top: 0.5rem;
+                left: 0.5rem;
+                z-index: 1000;
+            }
+
+            /* Adjust home button style */
+            .btn-outline.px-4.py-2 {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.9rem !important;
+                background: rgba(41, 128, 185, 0.3);
+            }
+
+            /* Fix header spacing and text sizes */
+            header.text-center {
+                padding-top: 3rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .text-6xl {
+                font-size: 2.5rem !important;
+                line-height: 1.2;
+                margin-bottom: 0.5rem;
+                padding: 0 0.5rem;
+            }
+
+            .subtitle-glow {
+                font-size: 1.2rem !important;
+                margin-bottom: 1rem;
+            }
+
+            /* Adjust card styles */
+            .card {
+                padding: 1rem !important;
+                margin: 0.5rem 0 !important;
+                border-radius: 16px;
+            }
+
+            /* Adjust input field styles */
+            .input-field {
+                font-size: 1rem !important;
+                padding: 0.75rem !important;
+                height: auto !important;
+                min-height: 45px !important;
+            }
+
+            /* Adjust button styles */
+            .btn-outline {
+                padding: 0.75rem 1.5rem !important;
+                font-size: 1rem !important;
+                white-space: nowrap;
+            }
+
+            /* Fix ingredient list spacing */
+            .space-y-4 {
+                margin-top: 1rem !important;
+            }
+
+            /* Adjust edit and remove buttons */
+            .edit-btn, .remove-btn {
+                font-size: 0.9rem !important;
+                padding: 0.25rem 0.5rem !important;
+            }
+
+            /* Fix navigation buttons container */
+            .flex.justify-between.mt-12 {
+                margin-top: 1.5rem !important;
+                gap: 0.5rem !important;
+            }
+
+            /* Fix max width for better mobile layout */
+            .max-w-3xl {
+                max-width: 100% !important;
+                padding: 0 0.5rem;
+            }
+
+            /* Adjust loading spinner size */
+            .loading-spinner {
+                height: 2rem !important;
+                width: 2rem !important;
+            }
+
+            /* Fix add ingredient section */
+            .mt-8 .flex.items-center.gap-4 {
+                gap: 0.5rem !important;
+            }
+
+            /* Ensure text doesn't overflow */
+            .card p, .card div {
+                word-break: break-word;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen text-white">

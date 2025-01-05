@@ -225,10 +225,9 @@
 
         .view-btn.active {
             background: rgba(41, 128, 185, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 1);
             color: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 15px rgba(41, 128, 185, 0.3);
-            font-weight: 700;
+            box-shadow: 0 0 25px rgba(41, 128, 185, 0.4);
         }
 
         .view-btn:not(.active) {
@@ -276,6 +275,7 @@
             position: relative;
             right: 0;
             margin-left: auto;
+            z-index: 30;
         }
 
         .ingredients-btn:hover {
@@ -294,6 +294,7 @@
             padding: 1rem !important;
             position: absolute;
             right: 0;
+            z-index: 40;
         }
 
         .ingredients-dropdown .flex {
@@ -712,7 +713,7 @@
             margin-left: 440px;
             margin-right: 280px;
             position: relative;
-            z-index: 20;
+            z-index: 10;
         }
 
         /* Question section positioning */
@@ -828,6 +829,7 @@
             position: relative;
             right: 0;
             margin-left: auto;
+            z-index: 30;
         }
 
         .ingredients-dropdown {
@@ -840,6 +842,7 @@
             padding: 1rem !important;
             position: absolute;
             right: 0;
+            z-index: 40;
         }
 
         .list-container {
@@ -1042,9 +1045,9 @@
                 font-size: 1.2rem !important;
             }
 
-            /* Fix home button */
+            /* Fix home button - make it static on mobile */
             .absolute.top-8.left-4 {
-                position: fixed !important;
+                position: absolute !important;
                 top: 0.5rem !important;
                 left: 0.5rem !important;
                 z-index: 1000 !important;
@@ -1068,6 +1071,99 @@
             #instructionsContainer {
                 overflow-x: hidden;
                 width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-reorder {
+                display: flex !important;
+                flex-direction: column;
+            }
+
+            .mobile-reorder .instruction-steps {
+                order: -1;
+                margin-bottom: 1rem !important;
+            }
+
+            .mobile-reorder #stepNavigation {
+                order: 0;
+                margin-top: 1rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            .mobile-reorder .control-buttons {
+                order: 1;
+            }
+
+            .control-buttons .card {
+                min-width: unset !important;
+                width: 100% !important;
+            }
+
+            /* Adjust navigation buttons spacing */
+            #stepNavigation {
+                padding: 0 !important;
+                gap: 0.5rem !important;
+            }
+
+            #stepNavigation .btn-outline {
+                padding: 0.75rem 1rem !important;
+                font-size: 1rem !important;
+            }
+
+            #stepCounter {
+                font-size: 1.1rem !important;
+            }
+        }
+
+        /* Desktop-specific layout */
+        @media (min-width: 769px) {
+            .mobile-reorder {
+                display: flex !important;
+                flex-direction: column;
+            }
+
+            .mobile-reorder .control-buttons {
+                order: -1;
+                margin-bottom: 0.5rem !important;
+            }
+
+            .mobile-reorder .instruction-steps {
+                order: 0;
+                margin-top: 0.5rem !important;
+            }
+
+            .mobile-reorder #stepNavigation {
+                order: 1;
+                margin-top: 2rem !important;
+            }
+
+            .control-buttons .card {
+                min-width: 800px !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 0.75rem !important;
+            }
+
+            .instruction-steps .card:first-child {
+                margin-top: 0.5rem !important;
+            }
+        }
+
+        /* Fixed positioning for recipe requirements */
+        .fixed.right-4.top-32 {
+            z-index: 30;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .ingredients-btn, 
+            .ingredients-dropdown,
+            .fixed.right-4.top-32 {
+                z-index: 30 !important;
+            }
+
+            .ingredients-dropdown {
+                z-index: 40 !important;
             }
         }
     </style>
@@ -1096,16 +1192,21 @@
             <p id="recipeTitle" class="subtitle-glow">Instructions for Steak</p>
         </header>
 
-        <!-- View Mode Buttons and Instructions - Moved to top -->
+        <!-- View Mode Buttons and Instructions -->
         <div class="max-w-4xl mx-auto">
             <div id="loadingState" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#1e2a3a] via-[#2c3e50] to-[#2980b9] z-50">
                 <div class="loading-spinner"></div>
                 <p class="subtitle-glow">Generating cooking instructions...</p>
             </div>
 
-            <div id="instructionsContainer" class="hidden">
+            <div id="instructionsContainer" class="hidden mobile-reorder">
+                <!-- Instructions Section -->
+                <div class="space-y-8 instruction-steps" id="instructionSteps">
+                    <!-- Instructions will be dynamically added here -->
+                </div>
+
                 <!-- View Mode Buttons -->
-                <div class="flex justify-center mb-8">
+                <div class="flex justify-center mb-8 control-buttons">
                     <div class="card p-2 inline-flex items-center justify-between" style="min-width: 800px;">
                         <div class="flex items-center">
                             <button onclick="setViewMode('step')" 
@@ -1128,11 +1229,6 @@
                             <span id="micText">Talk to AI Chef</span>
                         </button>
                     </div>
-                </div>
-
-                <!-- Instructions -->
-                <div class="space-y-8" id="instructionSteps">
-                    <!-- Instructions will be dynamically added here -->
                 </div>
 
                 <!-- Step Navigation -->
