@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCook AI - Your Intelligent Kitchen Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-1: #1e2a3a;
+            --bg-gradient-2: #2c3e50;
+            --bg-gradient-3: #2980b9;
+        }
+        
+        @keyframes flowStream {
+            0% {
+                transform: translateX(-50%) translateY(-50%) rotate(0deg);
+            }
+            100% {
+                transform: translateX(-50%) translateY(-50%) rotate(360deg);
+            }
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(
+                135deg,
+                var(--bg-gradient-1) 0%,
+                var(--bg-gradient-2) 50%,
+                var(--bg-gradient-3) 100%
+            );
+            min-height: 100vh;
+            color: #f0f0f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            width: 150vmax;
+            height: 150vmax;
+            top: 50%;
+            left: 50%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                var(--bg-gradient-3) 45%,
+                var(--bg-gradient-2) 50%,
+                transparent 55%
+            );
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::before {
+            animation: flowStream 20s linear infinite;
+        }
+
+        body::after {
+            animation: flowStream 15s linear infinite reverse;
+            opacity: 0.05;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2.5rem !important;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .card h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.5rem !important;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem !important;
+            letter-spacing: -0.5px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        .card p {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem !important;
+            line-height: 1.7;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.02em;
+        }
+        .btn-outline {
+            border: 1px solid #005f99;
+            color: #005f99;
+            background: transparent;
+            text-shadow: 0 0 10px rgba(0, 95, 153, 0.3);
+            box-shadow: 0 0 15px rgba(0, 95, 153, 0.1);
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        .btn-outline:hover {
+            background: #007acc;
+            border-color: #007acc;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 122, 204, 0.2);
+        }
+        .title-gradient {
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(235, 245, 255, 0.98) 20%,
+                rgba(190, 225, 255, 0.95) 40%,
+                rgba(145, 205, 255, 0.92) 60%,
+                rgba(100, 185, 255, 0.9) 80%,
+                rgba(65, 165, 255, 0.88) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .subtitle-glow {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right,
+                rgba(255, 255, 255, 0.98) 0%,
+                rgba(190, 225, 255, 0.95) 50%,
+                rgba(145, 205, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            font-size: 1.8rem;
+        }
+        .logo-container {
+            width: 140px;
+            height: 140px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+        }
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 3;
+        }
+        .logo-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(41, 128, 185, 0.3);
+            border-radius: 15%;
+            z-index: 1;
+        }
+        .logo-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(41, 128, 185, 0.8);
+            border-radius: 15%;
+            filter: blur(15px);
+            z-index: 2;
+            box-shadow: 
+                0 0 30px rgba(41, 128, 185, 0.8),
+                0 0 60px rgba(41, 128, 185, 0.6),
+                0 0 90px rgba(41, 128, 185, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-24 pt-12">
+            <!-- Logo -->
+            <div class="mx-auto mb-8 flex justify-center">
+                <div class="logo-container">
+                    <div class="logo-background"></div>
+                    <div class="logo-glow"></div>
+                    <img src="/static/images/chef_ai_logo.png" alt="Chef AI Logo" class="logo-image">
+                </div>
+            </div>
+            <h1 class="text-6xl mb-6 title-gradient">SmartCook AI</h1>
+            <p class="text-3xl mb-2 subtitle-glow">Your Intelligent Kitchen Assistant</p>
+        </header>
+
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+            <a href="/recipe_input" class="card text-left cursor-pointer">
+                <h2>I know what I want to cook</h2>
+                <p class="leading-relaxed">
+                    Enter a specific recipe and SmartCook AI will help you customize it with ingredient adjustments, portion sizes, and cooking preferences.
+                </p>
+            </a>
+
+            <div class="card text-left cursor-not-allowed opacity-75">
+                <h2>Help me decide what to cook</h2>
+                <p class="leading-relaxed">
+                    Tell me your preferences and available ingredients, and SmartCook AI will suggest personalized recipes just for you.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.documentElement.style.setProperty('--mouse-x', `${x}%`);
+            document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+        });
+    </script>
+</body>
+</html> 

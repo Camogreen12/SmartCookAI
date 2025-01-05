@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Questions - SmartCook AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-1: #1e2a3a;
+            --bg-gradient-2: #2c3e50;
+            --bg-gradient-3: #2980b9;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(
+                135deg,
+                var(--bg-gradient-1) 0%,
+                var(--bg-gradient-2) 25%,
+                var(--bg-gradient-3) 75%
+            );
+            min-height: 100vh;
+            color: #f0f0f0;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Add a wrapper for the background effects */
+        .bg-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .bg-wrapper::before,
+        .bg-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 150vmax;
+            height: 150vmax;
+            top: 50%;
+            left: 50%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(41, 128, 185, 0.1) 45%,
+                rgba(41, 128, 185, 0.1) 50%,
+                transparent 55%
+            );
+            transform: translate(-50%, -50%);
+            animation: flowStream 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .bg-wrapper::after {
+            animation: flowStream 15s linear infinite reverse;
+            opacity: 0.5;
+        }
+
+        @keyframes flowStream {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 24px;
+            padding: 1.5rem !important;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .input-field {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            padding: 1rem !important;
+            border-radius: 16px;
+            width: 100%;
+            letter-spacing: 0.02em;
+        }
+
+        .input-field:focus {
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(41, 128, 185, 0.5);
+            box-shadow: 0 0 40px rgba(41, 128, 185, 0.25);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+        .btn-outline {
+            font-family: 'Playfair Display', serif;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(41, 128, 185, 0.25);
+            text-shadow: 0 0 10px rgba(41, 128, 185, 0.3);
+            box-shadow: 0 0 25px rgba(41, 128, 185, 0.2),
+                       0 0 0 2px rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            border-radius: 16px;
+            padding: 1.25rem 2.5rem;
+            font-size: 1.2rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(41, 128, 185, 0.35);
+            border-color: rgba(255, 255, 255, 1);
+            color: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 50px rgba(41, 128, 185, 0.35),
+                       0 0 0 2px rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .title-gradient {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(255, 255, 255, 0.98) 30%,
+                rgba(235, 245, 255, 0.96) 50%,
+                rgba(215, 235, 255, 0.94) 70%,
+                rgba(195, 225, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .subtitle-glow {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right,
+                rgba(255, 255, 255, 0.98) 0%,
+                rgba(190, 225, 255, 0.95) 50%,
+                rgba(145, 205, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            font-weight: 500;
+        }
+
+        .loading-spinner {
+            border-color: rgba(41, 128, 185, 0.3);
+            border-top-color: rgba(41, 128, 185, 0.9);
+        }
+
+        /* Question-specific styles */
+        .question-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 1rem;
+        }
+
+        select.input-field {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5rem;
+            padding-right: 2.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transform: none;
+            background-color: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        select.input-field option {
+            background: rgba(30, 42, 58, 0.95);
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            padding: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        select.input-field option:hover,
+        select.input-field option:focus,
+        select.input-field option:active {
+            background: rgba(41, 128, 185, 0.3);
+            color: white;
+        }
+
+        select.input-field option:checked {
+            background: rgba(41, 128, 185, 0.4);
+            color: white;
+        }
+
+        select.input-field:focus {
+            background-color: rgba(41, 128, 185, 0.15);
+            border-color: rgba(41, 128, 185, 0.5);
+            box-shadow: 0 0 40px rgba(41, 128, 185, 0.25);
+            outline: none;
+        }
+
+        /* Style for the placeholder option */
+        select.input-field option[value=""][disabled] {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .custom-input {
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .custom-input:focus {
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(41, 128, 185, 0.5);
+            box-shadow: 0 0 40px rgba(41, 128, 185, 0.25);
+            outline: none;
+        }
+
+        .idk-button {
+            font-family: 'Playfair Display', serif;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .idk-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Adjust header and title styles to prevent text cutoff */
+        header.text-center {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        h1.text-6xl {
+            line-height: 1.2;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 5rem;
+        }
+
+        #recipeTitle {
+            line-height: 1.2;
+            padding-bottom: 0.25rem;
+            font-size: 1.75rem;
+        }
+
+        .title-gradient {
+            padding-bottom: 0.25rem;
+            margin-bottom: 0.25rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+    <div class="bg-wrapper"></div>
+    <!-- Home Button -->
+    <div class="absolute top-6 left-4">
+        <a href="/" class="btn-outline px-4 py-2 rounded-lg transition duration-300">
+            Home
+        </a>
+    </div>
+
+    <div class="container mx-auto px-6 pt-0">
+        <header class="text-center mb-2">
+            <h1 class="text-6xl font-bold title-gradient">Recipe Questions</h1>
+            <p id="recipeTitle" class="text-2xl mt-1 subtitle-glow opacity-90">Questions for {{ recipe_name }}</p>
+        </header>
+
+        <div class="max-w-3xl mx-auto">
+            <div id="loadingState" class="text-center py-2">
+                <div class="loading-spinner animate-spin rounded-full h-12 w-12 border-4 mx-auto mb-2"></div>
+                <p class="subtitle-glow text-xl">Generating questions...</p>
+            </div>
+
+            <div id="questionsContainer" class="space-y-3 hidden">
+                <!-- Questions will be dynamically added here -->
+            </div>
+
+            <div class="flex justify-between mt-6">
+                <a href="/ingredients" class="btn-outline">
+                    Back
+                </a>
+                <button onclick="proceedToInstructions()" 
+                        class="btn-outline">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let answers = {};
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = questions.map((question, index) => `
+                <div class="card">
+                    <p class="question-text">${question.text}</p>
+                    <div class="flex flex-col gap-4">
+                        <div class="w-full">
+                            <select class="input-field w-full" 
+                                    onchange="handleSelectChange(${index}, this.value)"
+                                    onfocus="this.blur()">
+                                <option value="" disabled selected>Select an option</option>
+                                ${question.options ? question.options.map(opt => 
+                                    opt.toLowerCase() === 'other' ? '' : 
+                                    `<option value="${opt}">${opt}</option>`
+                                ).join('') : ''}
+                                <option value="custom">Type your own answer</option>
+                                <option value="I don't know">I don't know</option>
+                            </select>
+                        </div>
+                        <div id="customInput_${index}" class="w-full hidden">
+                            <input type="text" 
+                                   class="custom-input"
+                                   placeholder="Type your answer here"
+                                   onchange="updateAnswer(${index}, this.value)">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleSelectChange(index, value) {
+            const customInputDiv = document.getElementById(`customInput_${index}`);
+            if (value === 'custom') {
+                customInputDiv.classList.remove('hidden');
+                // Don't update answer yet - wait for custom input
+            } else {
+                customInputDiv.classList.add('hidden');
+                updateAnswer(index, value);
+            }
+        }
+
+        function updateAnswer(index, value) {
+            answers[index] = {
+                question: questions[index].text,
+                answer: value
+            };
+            sessionStorage.setItem('answers', JSON.stringify(Object.values(answers)));
+        }
+
+        function proceedToInstructions() {
+            // Ensure all questions are answered
+            if (Object.keys(answers).length < questions.length) {
+                alert('Please answer all questions or select "I don\'t know"');
+                return;
+            }
+            window.location.href = '/instructions';
+        }
+
+        window.onload = async function() {
+            const recipeName = sessionStorage.getItem('recipeName');
+            const ingredients = JSON.parse(sessionStorage.getItem('ingredients') || '[]');
+            
+            if (!recipeName || !ingredients.length) {
+                window.location.href = '/recipe_input';
+                return;
+            }
+            
+            document.getElementById('recipeTitle').textContent = `Questions for ${recipeName}`;
+            
+            try {
+                const response = await fetch('/api/generate_questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        recipe_name: recipeName,
+                        ingredients: ingredients
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.questions) {
+                    questions = data.questions;
+                    answers = {};  // Initialize answers as an empty object
+                    renderQuestions();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('questionsContainer').classList.remove('hidden');
+            }
+        };
+    </script>
+</body>
+</html> 

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Recipe - SmartCook AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-1: #1e2a3a;
+            --bg-gradient-2: #2c3e50;
+            --bg-gradient-3: #2980b9;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(
+                135deg,
+                var(--bg-gradient-1) 0%,
+                var(--bg-gradient-2) 25%,
+                var(--bg-gradient-3) 75%
+            );
+            min-height: 100vh;
+            color: #f0f0f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card {
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 24px;
+            min-height: 450px;
+            padding: 3.5rem !important;
+            width: 100%;
+            max-width: 1000px;
+            margin: 2rem auto;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .input-field {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            font-size: 1.3rem;
+            padding: 1.5rem !important;
+            border-radius: 16px;
+            height: 70px;
+            width: 100%;
+            margin-top: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .input-field:focus {
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(41, 128, 185, 0.5);
+            box-shadow: 0 0 40px rgba(41, 128, 185, 0.25);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.15rem;
+        }
+
+        .input-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 1rem;
+            display: block;
+            letter-spacing: 0.02em;
+        }
+
+        .input-sublabel {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.75rem;
+            display: block;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-outline {
+            font-family: 'Playfair Display', serif;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(41, 128, 185, 0.25);
+            text-shadow: 0 0 10px rgba(41, 128, 185, 0.3);
+            box-shadow: 0 0 25px rgba(41, 128, 185, 0.2),
+                       0 0 0 2px rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            border-radius: 16px;
+            padding: 1.25rem 2.5rem;
+            font-size: 1.2rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(41, 128, 185, 0.35);
+            border-color: rgba(255, 255, 255, 1);
+            color: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 50px rgba(41, 128, 185, 0.35),
+                       0 0 0 2px rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .form-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .title-gradient {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(255, 255, 255, 0.98) 30%,
+                rgba(235, 245, 255, 0.96) 50%,
+                rgba(215, 235, 255, 0.94) 70%,
+                rgba(195, 225, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .subtitle-glow {
+            background: linear-gradient(to right,
+                rgba(255, 255, 255, 0.98) 0%,
+                rgba(190, 225, 255, 0.95) 50%,
+                rgba(145, 205, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+    <!-- Home Button -->
+    <div class="absolute top-8 left-4">
+        <a href="/" 
+           class="btn-outline px-4 py-2 rounded-lg transition duration-300"
+           onclick="sessionStorage.clear();">
+            Home
+        </a>
+    </div>
+
+    <div class="container mx-auto px-6 py-12">
+        <header class="text-center mb-16">
+            <h1 class="text-7xl font-bold mb-6 title-gradient">What would you like to make?</h1>
+        </header>
+
+        <div class="mx-auto" style="max-width: 1000px;">
+            <div class="card space-y-8">
+                <div class="form-group">
+                    <label class="input-label">Recipe Name</label>
+                    <input type="text" 
+                           id="recipeName" 
+                           class="w-full input-field"
+                           placeholder="Enter recipe name (e.g., Steak, Pasta, Chicken)">
+                </div>
+                
+                <div class="form-group">
+                    <label class="input-label">
+                        Quantity
+                        <span class="input-sublabel">
+                            Only use for items where quantity makes sense (e.g., 2 steaks, 4 chicken breasts)
+                        </span>
+                    </label>
+                    <input type="number" 
+                           id="quantity" 
+                           class="w-full input-field"
+                           placeholder="Enter quantity if applicable"
+                           min="1">
+                </div>
+
+                <div class="flex justify-center">
+                    <button onclick="proceed()" 
+                            class="btn-outline transition duration-300">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function proceed() {
+            const recipeName = document.getElementById('recipeName').value.trim();
+            const quantity = document.getElementById('quantity').value.trim();
+            
+            if (!recipeName) {
+                alert('Please enter what you would like to make');
+                return;
+            }
+            
+            // Combine quantity with recipe name if provided
+            const fullRecipeName = quantity ? `${quantity} ${recipeName}` : recipeName;
+            sessionStorage.setItem('recipeName', fullRecipeName);
+            window.location.href = '/ingredients';
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('recipeName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                proceed();
+            }
+        });
+
+        document.getElementById('quantity').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                proceed();
+            }
+        });
+
+        function submitRecipe() {
+            const recipeName = document.getElementById('recipeName').value.trim();
+            if (recipeName) {
+                // Clear any previously stored ingredients
+                sessionStorage.removeItem('storedIngredients');
+                sessionStorage.removeItem('ingredients');
+                // Store the new recipe name
+                sessionStorage.setItem('recipeName', recipeName);
+                window.location.href = '/ingredients';
+            }
+        }
+    </script>
+</body>
+</html> 

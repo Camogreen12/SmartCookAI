@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooking Instructions - SmartCook AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-1: #1e2a3a;
+            --bg-gradient-2: #2c3e50;
+            --bg-gradient-3: #2980b9;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(
+                135deg,
+                var(--bg-gradient-1) 0%,
+                var(--bg-gradient-2) 50%,
+                var(--bg-gradient-3) 100%
+            ) fixed;
+            min-height: 100vh;
+            color: #f0f0f0;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .container {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0;
+            position: relative;
+        }
+
+        .card {
+            background: rgba(41, 128, 185, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+            padding: 1.5rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: visible;
+            text-align: center;
+            margin-top: 1rem;
+            margin-left: 1rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 40px rgba(41, 128, 185, 0.2);
+            border-color: rgba(41, 128, 185, 0.3);
+            background: rgba(41, 128, 185, 0.12);
+        }
+
+        .card:hover::after {
+            transform: translateY(-2px);
+        }
+
+        .input-field {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            padding: 1rem !important;
+            border-radius: 16px;
+            width: 100%;
+            letter-spacing: 0.02em;
+        }
+
+        .input-field:focus {
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(41, 128, 185, 0.5);
+            box-shadow: 0 0 40px rgba(41, 128, 185, 0.25);
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+        .btn-outline {
+            font-family: 'Playfair Display', serif;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(41, 128, 185, 0.25);
+            text-shadow: 0 0 10px rgba(41, 128, 185, 0.3);
+            box-shadow: 0 0 25px rgba(41, 128, 185, 0.2),
+                       0 0 0 2px rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            border-radius: 16px;
+            padding: 1.25rem 2.5rem;
+            font-size: 1.2rem;
+            letter-spacing: 0.05em;
+            position: relative;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-outline::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-outline:hover {
+            background: rgba(41, 128, 185, 0.35);
+            border-color: rgba(255, 255, 255, 1);
+            color: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 50px rgba(41, 128, 185, 0.35),
+                       0 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline:hover::after {
+            transform: translateY(-3px);
+        }
+
+        .title-gradient {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(255, 255, 255, 0.98) 30%,
+                rgba(235, 245, 255, 0.96) 50%,
+                rgba(215, 235, 255, 0.94) 70%,
+                rgba(195, 225, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle-glow {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right,
+                rgba(255, 255, 255, 0.98) 0%,
+                rgba(190, 225, 255, 0.95) 50%,
+                rgba(145, 205, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: 0.02em;
+            padding-top: 0.5rem;
+        }
+
+        .loading-spinner {
+            border-color: rgba(41, 128, 185, 0.3);
+            border-top-color: rgba(41, 128, 185, 0.9);
+        }
+
+        /* View mode buttons */
+        .view-btn {
+            font-family: 'Playfair Display', serif;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            background: rgba(41, 128, 185, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+        }
+
+        .view-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .view-btn:hover {
+            background: rgba(41, 128, 185, 0.25);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .view-btn:hover::after {
+            transform: translateY(-2px);
+        }
+
+        .view-btn.active {
+            background: rgba(41, 128, 185, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 15px rgba(41, 128, 185, 0.3);
+            font-weight: 700;
+        }
+
+        .view-btn:not(.active) {
+            opacity: 0.9;
+        }
+
+        .view-btn:not(.active):hover {
+            background: rgba(41, 128, 185, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.95);
+            opacity: 1;
+        }
+
+        /* Add a subtle animation for the active state */
+        .view-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.5);
+            animation: activeGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes activeGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Ingredients dropdown */
+        .ingredients-btn {
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            width: 280px !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            right: 0;
+            margin-left: auto;
+        }
+
+        .ingredients-btn:hover {
+            background: rgba(41, 128, 185, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .ingredients-dropdown {
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            width: auto !important;
+            min-width: 550px !important;
+            padding: 1rem !important;
+            position: absolute;
+            right: 0;
+        }
+
+        .ingredients-dropdown .flex {
+            gap: 2rem;
+        }
+
+        .ingredients-dropdown .list-container {
+            width: 45%;
+        }
+
+        .list-container {
+            margin-bottom: 0;
+        }
+
+        #ingredientsList, #equipmentList {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #ingredientsList li, #equipmentList li {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        #ingredientsList li:last-child, #equipmentList li:last-child {
+            border-bottom: none;
+        }
+
+        #ingredientsList li::before, #equipmentList li::before {
+            content: '•';
+            color: rgba(41, 128, 185, 0.8);
+            font-weight: bold;
+            font-size: 1.4rem;
+            line-height: 0;
+        }
+
+        #equipmentList li::before {
+            content: '⚡';
+            color: rgba(255, 196, 0, 0.8);
+        }
+
+        /* Step styling */
+        .step-number {
+            position: absolute;
+            top: -1rem;
+            left: -1rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(41, 128, 185, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .card:hover .step-number {
+            background: rgba(41, 128, 185, 0.25);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .step-content {
+            padding: 1rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .step-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.01em;
+            text-align: center;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .step-detail {
+            background: rgba(41, 128, 185, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .detail-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        .detail-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-text strong {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+        }
+
+        .detail-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0.5rem 0;
+        }
+
+        .detail-list li {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            padding: 0.25rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .detail-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: rgba(41, 128, 185, 0.8);
+        }
+
+        .sensory-group {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: rgba(41, 128, 185, 0.05);
+            border-radius: 8px;
+        }
+
+        .sensory-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.5rem;
+            text-transform: capitalize;
+        }
+
+        .timing-detail {
+            border-left: 3px solid rgba(41, 128, 185, 0.5);
+        }
+
+        .safety-detail {
+            border-left: 3px solid rgba(255, 99, 71, 0.5);
+            background: rgba(255, 99, 71, 0.05);
+        }
+
+        .warnings-detail {
+            border-left: 3px solid rgba(255, 99, 71, 0.5);
+            background: rgba(255, 99, 71, 0.05);
+        }
+
+        .technique-detail {
+            border-left: 3px solid rgba(46, 204, 113, 0.5);
+        }
+
+        .temperature-detail {
+            border-left: 3px solid rgba(241, 196, 15, 0.5);
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .action-button:hover {
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(41, 128, 185, 0.2);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .action-button:hover::before {
+            transform: translateY(-2px);
+        }
+
+        .action-button svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .action-button::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        .step-why, .step-note {
+            background: rgba(41, 128, 185, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.01em;
+            animation: fadeIn 0.3s ease;
+            width: 100%;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ask-btn {
+            background: rgba(41, 128, 185, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.85);
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+            display: block;
+            margin: 1rem auto 0;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.02em;
+        }
+
+        .ask-btn:hover {
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Question section styles */
+        #questionInputSection {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        #questionInputSection .card {
+            background: rgba(41, 128, 185, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        #answerContainer {
+            background: rgba(41, 128, 185, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #answerText {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .ask-btn {
+            background: rgba(41, 128, 185, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .ask-btn:hover {
+            background: rgba(41, 128, 185, 0.25);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Question section specific styles */
+        .question-card {
+            background: rgba(41, 128, 185, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            border-radius: 24px;
+            padding: 1.5rem;
+            width: 100%;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+        }
+
+        #questionInputSection {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        #answerContainer {
+            background: rgba(41, 128, 185, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+        }
+
+        #answerText {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            white-space: normal;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
+            hyphens: auto;
+        }
+
+        /* Custom scrollbar for the question card */
+        .question-card::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .question-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .question-card::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        /* Ensure proper spacing between question section and instructions */
+        .max-w-4xl {
+            width: calc(100% - 800px);
+            max-width: 1200px;
+            margin-left: 440px;
+            margin-right: 280px;
+            position: relative;
+            z-index: 20;
+        }
+
+        /* Question section positioning */
+        .fixed.left-4.top-32 {
+            left: 20px;
+            width: 440px;
+            z-index: 30;
+        }
+
+        /* Ingredients section positioning */
+        .fixed.right-4.top-32 {
+            right: 20px;
+            z-index: 30;
+        }
+
+        /* Ensure the question section doesn't overlap with bottom navigation */
+        @media screen and (max-height: 800px) {
+            .fixed.left-4.top-32 {
+                max-height: calc(100vh - 280px);
+            }
+        }
+
+        /* Loading state styles */
+        #loadingState {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                var(--bg-gradient-1) 0%,
+                var(--bg-gradient-2) 25%,
+                var(--bg-gradient-3) 75%
+            );
+            z-index: 40;
+        }
+
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border-width: 4px;
+            border-style: solid;
+            border-radius: 50%;
+            border-color: rgba(41, 128, 185, 0.3);
+            border-top-color: rgba(41, 128, 185, 0.9);
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loadingState .subtitle-glow {
+            font-size: 2.5rem;
+            line-height: 1.6;
+            padding: 1rem 0;
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right,
+                rgba(255, 255, 255, 0.98) 0%,
+                rgba(190, 225, 255, 0.95) 50%,
+                rgba(145, 205, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+        }
+
+        /* Ingredients and Equipment Sections */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .subsection-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0.5rem 0;
+            padding-top: 0;
+        }
+
+        .ingredients-btn {
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            width: 280px !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            right: 0;
+            margin-left: auto;
+        }
+
+        .ingredients-dropdown {
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            width: auto !important;
+            min-width: 550px !important;
+            padding: 1rem !important;
+            position: absolute;
+            right: 0;
+        }
+
+        .list-container {
+            margin-bottom: 0;
+        }
+
+        #ingredientsList, #equipmentList {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #ingredientsList li, #equipmentList li {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        #ingredientsList li:last-child, #equipmentList li:last-child {
+            border-bottom: none;
+        }
+
+        #ingredientsList li::before, #equipmentList li::before {
+            content: '•';
+            color: rgba(41, 128, 185, 0.8);
+            font-weight: bold;
+            font-size: 1.4rem;
+            line-height: 0;
+        }
+
+        #equipmentList li::before {
+            content: '⚡';
+            color: rgba(255, 196, 0, 0.8);
+        }
+
+        .ingredients-dropdown .flex {
+            gap: 2rem;
+        }
+
+        .ingredients-dropdown .list-container {
+            width: 45%;
+        }
+
+        .btn-outline.active {
+            background: rgba(41, 128, 185, 0.35);
+            border-color: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 25px rgba(41, 128, 185, 0.4);
+        }
+
+        #micIcon {
+            transition: color 0.3s ease;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+    <script>
+        // Add CORS headers for Eleven Labs
+        window.addEventListener('load', function() {
+            if (!window.chefAssistant) {
+                console.error('Chef Assistant failed to initialize');
+            }
+        });
+    </script>
+</head>
+<body class="min-h-screen text-white">
+    <!-- Home Button -->
+    <div class="absolute top-8 left-4" style="z-index: 9999;">
+        <a href="/" 
+           class="btn-outline px-4 py-2 rounded-lg transition duration-300"
+           onclick="sessionStorage.clear();">
+            Home
+        </a>
+    </div>
+
+    <div class="container mx-auto px-6 py-12">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-bold title-gradient">Cooking Instructions</h1>
+            <p id="recipeTitle" class="subtitle-glow">Instructions for Steak</p>
+        </header>
+
+        <!-- Left Side - Question Section -->
+        <div class="fixed left-4 top-32" style="width: 440px;">
+            <button onclick="toggleQuestionInput()" 
+                    id="askQuestionBtn"
+                    class="btn-outline w-full mb-4 py-3 px-4 flex items-center justify-between">
+                <span>Ask a Question</span>
+                <svg id="questionArrow" class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            
+            <div id="questionInputSection" class="hidden">
+                <div style="background: rgba(41, 128, 185, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 1rem;">
+                    <input type="text" 
+                           id="questionInput"
+                           class="input-field"
+                           placeholder="Ask anything about the recipe...">
+                    <button onclick="askQuestion()"
+                            class="btn-outline w-full py-2 mt-4">
+                        Ask
+                    </button>
+                    <div id="answerContainer" class="mt-4 hidden">
+                        <div style="background: rgba(41, 128, 185, 0.1); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <p id="answerText" style="color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; line-height: 1.6; white-space: normal; width: 100%; word-break: break-word;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center - Main Content -->
+        <div class="max-w-4xl">
+            <div id="loadingState" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#1e2a3a] via-[#2c3e50] to-[#2980b9] z-50">
+                <div class="loading-spinner"></div>
+                <p class="subtitle-glow">Generating cooking instructions...</p>
+            </div>
+
+            <div id="instructionsContainer" class="hidden">
+                <!-- View Mode Buttons -->
+                <div class="flex justify-center mb-8">
+                    <div class="card p-2 inline-flex items-center justify-between" style="min-width: 800px;">
+                        <div class="flex items-center">
+                            <button onclick="setViewMode('step')" 
+                                    id="viewStepBtn"
+                                    class="view-btn active mr-2">
+                                View Step by Step
+                            </button>
+                            <button onclick="setViewMode('all')" 
+                                    id="viewAllBtn"
+                                    class="view-btn">
+                                View All Steps
+                            </button>
+                        </div>
+                        <button id="micButton" 
+                                onclick="toggleVoiceAssistant()"
+                                class="flex items-center gap-3 px-8 py-4 text-xl font-bold bg-[rgba(41,128,185,0.25)] border-2 border-white rounded-lg hover:bg-[rgba(41,128,185,0.35)] transition-all duration-300">
+                            <svg id="micIcon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                            </svg>
+                            <span id="micText">Talk to AI Chef</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="space-y-8" id="instructionSteps">
+                    <!-- Instructions will be dynamically added here -->
+                </div>
+
+                <!-- Step Navigation -->
+                <div id="stepNavigation" class="flex justify-between mt-8 hidden">
+                    <button onclick="previousStep()" 
+                            id="prevStepBtn"
+                            class="btn-outline">
+                        Previous Step
+                    </button>
+                    <span id="stepCounter" class="text-2xl font-semibold subtitle-glow self-center"></span>
+                    <button onclick="nextStep()" 
+                            id="nextStepBtn"
+                            class="btn-outline">
+                        Next Step
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Ingredients and Equipment -->
+        <div class="fixed right-4 top-32">
+            <button onclick="toggleIngredients()" 
+                    class="ingredients-btn rounded-lg mb-2 flex justify-between items-center">
+                <span>Recipe Requirements</span>
+                <svg id="ingredientsArrow" class="w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            <div id="ingredientsDropdown" class="hidden ingredients-dropdown rounded-lg">
+                <div class="flex gap-8">
+                    <div class="list-container w-64">
+                        <h3 class="subsection-title">Kitchen Essentials</h3>
+                        <ul id="equipmentList" class="space-y-2">
+                            <!-- Equipment will be listed here -->
+                        </ul>
+                    </div>
+                    <div class="list-container w-64">
+                        <h3 class="subsection-title">Ingredients</h3>
+                        <ul id="ingredientsList" class="space-y-2">
+                            <!-- Ingredients will be listed here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/chef_assistant.js" type="text/javascript"></script>
+    <script>
+        let instructions = [];
+        let currentStep = 0;
+        let viewMode = 'all';
+
+        function setViewMode(mode) {
+            viewMode = mode;
+            const allBtn = document.getElementById('viewAllBtn');
+            const stepBtn = document.getElementById('viewStepBtn');
+            const stepNav = document.getElementById('stepNavigation');
+            
+            if (mode === 'all') {
+                allBtn.classList.add('active');
+                stepBtn.classList.remove('active');
+                stepNav.classList.add('hidden');
+                currentStep = 0;
+            } else {
+                allBtn.classList.remove('active');
+                stepBtn.classList.add('active');
+                stepNav.classList.remove('hidden');
+                currentStep = 0; // Reset to first step when switching to step mode
+                updateStepCounter();
+            }
+            
+            renderInstructions();
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderInstructions();
+                updateStepCounter();
+                // Scroll to top of the step
+                document.getElementById('instructionSteps').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < instructions.length - 1) {
+                currentStep++;
+                renderInstructions();
+                updateStepCounter();
+                // Scroll to top of the step
+                document.getElementById('instructionSteps').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function updateStepCounter() {
+            const counter = document.getElementById('stepCounter');
+            counter.textContent = `Step ${currentStep + 1} of ${instructions.length}`;
+            
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prevStepBtn');
+            const nextBtn = document.getElementById('nextStepBtn');
+            
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === instructions.length - 1;
+            
+            // Update button styles based on disabled state
+            if (prevBtn.disabled) {
+                prevBtn.style.opacity = '0.5';
+                prevBtn.style.cursor = 'not-allowed';
+            } else {
+                prevBtn.style.opacity = '1';
+                prevBtn.style.cursor = 'pointer';
+            }
+            
+            if (nextBtn.disabled) {
+                nextBtn.style.opacity = '0.5';
+                nextBtn.style.cursor = 'not-allowed';
+            } else {
+                nextBtn.style.opacity = '1';
+                nextBtn.style.cursor = 'pointer';
+            }
+        }
+
+        function toggleNote(index) {
+            const noteDiv = document.getElementById(`note-${index}`);
+            if (noteDiv) {
+                noteDiv.classList.toggle('hidden');
+            }
+        }
+
+        function toggleWhy(index) {
+            const whyDiv = document.getElementById(`why-${index}`);
+            if (whyDiv) {
+                whyDiv.classList.toggle('hidden');
+            }
+        }
+
+        function toggleIngredients() {
+            const dropdown = document.getElementById('ingredientsDropdown');
+            const arrow = document.getElementById('ingredientsArrow');
+            dropdown.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        }
+
+        function renderIngredients(ingredients) {
+            const ingredientsList = document.getElementById('ingredientsList');
+            ingredientsList.innerHTML = ingredients.map(ingredient => `
+                <li class="text-white opacity-90">${ingredient}</li>
+            `).join('');
+        }
+
+        function renderEquipment(equipment) {
+            const equipmentList = document.getElementById('equipmentList');
+            if (!equipment || !Array.isArray(equipment)) return;
+            
+            equipmentList.innerHTML = equipment.map(item => `
+                <li class="text-white opacity-90">${item}</li>
+            `).join('');
+        }
+
+        function renderInstructions() {
+            const container = document.getElementById('instructionSteps');
+            console.log('Rendering instructions:', instructions);
+            console.log('Current view mode:', viewMode);
+            
+            if (!Array.isArray(instructions) || instructions.length === 0) {
+                container.innerHTML = '<p class="text-white opacity-90 text-xl text-center">No instructions available.</p>';
+                return;
+            }
+            
+            if (viewMode === 'all') {
+                container.innerHTML = instructions.map((step, index) => {
+                    if (!step || typeof step !== 'object') {
+                        return '';
+                    }
+                    
+                    return `
+                        <div class="card transform hover:scale-[1.02] transition-transform duration-300">
+                            <div class="step-content">
+                                <div class="step-number">${index + 1}</div>
+                                <p class="step-text">${step.action || ''}</p>
+                                
+                                <div class="step-actions">
+                                    ${step.why ? `
+                                        <button onclick="toggleWhy(${index})" 
+                                                class="action-button"
+                                                data-tooltip="View Why">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Why?
+                                        </button>
+                                    ` : ''}
+                                    ${step.note ? `
+                                        <button onclick="toggleNote(${index})" 
+                                                class="action-button"
+                                                data-tooltip="View Tip">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                            </svg>
+                                            Tip
+                                        </button>
+                                    ` : ''}
+                                    <button onclick="askAboutStep(${index})" 
+                                            class="action-button"
+                                            data-tooltip="Ask a question about this step">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Ask
+                                    </button>
+                                </div>
+                                
+                                ${step.why ? `
+                                    <div id="why-${index}" class="step-why hidden">
+                                        ${step.why}
+                                    </div>
+                                ` : ''}
+                                ${step.note ? `
+                                    <div id="note-${index}" class="step-note hidden">
+                                        ${step.note}
+                                    </div>
+                                ` : ''}
+
+                                <!-- Question Input for Each Step -->
+                                <div id="questionSection-${index}" class="mt-4 hidden">
+                                    <div class="bg-opacity-10 bg-blue-500 rounded-lg p-4">
+                                        <input type="text" 
+                                               id="questionInput-${index}"
+                                               class="input-field w-full"
+                                               placeholder="Ask a question about this step...">
+                                        <button onclick="submitQuestion(${index})"
+                                                class="btn-outline w-full py-2 mt-2">
+                                            Ask
+                                        </button>
+                                        <div id="answerContainer-${index}" class="mt-4 hidden">
+                                            <div class="bg-opacity-10 bg-blue-500 rounded-lg p-4">
+                                                <p id="answerText-${index}" class="text-white opacity-90"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                const step = instructions[currentStep];
+                if (!step || typeof step !== 'object') {
+                    container.innerHTML = '<p class="text-white opacity-90 text-xl text-center">Invalid step data.</p>';
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div class="card transform hover:scale-[1.02] transition-transform duration-300">
+                        <div class="step-content">
+                            <div class="step-number">${currentStep + 1}</div>
+                            <p class="step-text">${step.action || ''}</p>
+                            
+                            <div class="step-actions">
+                                ${step.why ? `
+                                    <button onclick="toggleWhy(${currentStep})" 
+                                            class="action-button"
+                                            data-tooltip="View Why">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Why?
+                                    </button>
+                                ` : ''}
+                                ${step.note ? `
+                                    <button onclick="toggleNote(${currentStep})" 
+                                            class="action-button"
+                                            data-tooltip="View Tip">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                        </svg>
+                                        Tip
+                                    </button>
+                                ` : ''}
+                                <button onclick="askAboutStep(${currentStep})" 
+                                        class="action-button"
+                                        data-tooltip="Ask a question about this step">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Ask
+                                </button>
+                            </div>
+                            
+                            ${step.why ? `
+                                <div id="why-${currentStep}" class="step-why hidden">
+                                    ${step.why}
+                                </div>
+                            ` : ''}
+                            ${step.note ? `
+                                <div id="note-${currentStep}" class="step-note hidden">
+                                    ${step.note}
+                                </div>
+                            ` : ''}
+
+                            <!-- Question Input for Current Step -->
+                            <div id="questionSection-${currentStep}" class="mt-4 hidden">
+                                <div class="bg-opacity-10 bg-blue-500 rounded-lg p-4">
+                                    <input type="text" 
+                                           id="questionInput-${currentStep}"
+                                           class="input-field w-full"
+                                           placeholder="Ask a question about this step...">
+                                    <button onclick="submitQuestion(${currentStep})"
+                                            class="btn-outline w-full py-2 mt-2">
+                                        Ask
+                                    </button>
+                                    <div id="answerContainer-${currentStep}" class="mt-4 hidden">
+                                        <div class="bg-opacity-10 bg-blue-500 rounded-lg p-4">
+                                            <p id="answerText-${currentStep}" class="text-white opacity-90"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function askAboutStep(stepIndex) {
+            const questionSection = document.getElementById(`questionSection-${stepIndex}`);
+            const answerContainer = document.getElementById(`answerContainer-${stepIndex}`);
+            const questionInput = document.getElementById(`questionInput-${stepIndex}`);
+            
+            // If this section is already visible, hide it and clear inputs
+            if (!questionSection.classList.contains('hidden')) {
+                questionSection.classList.add('hidden');
+                answerContainer.classList.add('hidden');
+                questionInput.value = '';
+                return;
+            }
+            
+            // Hide all other question sections first
+            document.querySelectorAll('[id^="questionSection-"]').forEach(section => {
+                if (section.id !== `questionSection-${stepIndex}`) {
+                    section.classList.add('hidden');
+                    // Clear other inputs and answers
+                    const idx = section.id.split('-')[1];
+                    const otherInput = document.getElementById(`questionInput-${idx}`);
+                    const otherAnswer = document.getElementById(`answerContainer-${idx}`);
+                    if (otherInput) otherInput.value = '';
+                    if (otherAnswer) otherAnswer.classList.add('hidden');
+                }
+            });
+            
+            // Show this question section
+            questionSection.classList.remove('hidden');
+            questionInput.focus();
+        }
+
+        async function submitQuestion(stepIndex) {
+            const questionInput = document.getElementById(`questionInput-${stepIndex}`);
+            const question = questionInput.value.trim();
+            
+            if (!question) {
+                return;
+            }
+            
+            const answerContainer = document.getElementById(`answerContainer-${stepIndex}`);
+            const answerText = document.getElementById(`answerText-${stepIndex}`);
+            
+            answerText.textContent = 'Thinking...';
+            answerContainer.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/ask_question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question,
+                        recipe_name: sessionStorage.getItem('recipeName'),
+                        current_step: stepIndex,
+                        instructions: instructions
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    answerText.textContent = data.answer;
+                } else {
+                    answerText.textContent = 'Sorry, please try asking in a different way.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                answerText.textContent = 'Sorry, please try asking again.';
+            }
+        }
+
+        function toggleQuestionInput() {
+            const questionSection = document.getElementById('questionInputSection');
+            const arrow = document.getElementById('questionArrow');
+            questionSection.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        }
+
+        async function askQuestion() {
+            const questionInput = document.getElementById('questionInput');
+            const question = questionInput.value.trim();
+            
+            if (!question) {
+                return;
+            }
+            
+            const answerContainer = document.getElementById('answerContainer');
+            const answerText = document.getElementById('answerText');
+            
+            answerText.textContent = 'Thinking...';
+            answerContainer.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/ask_question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question,
+                        recipe_name: sessionStorage.getItem('recipeName'),
+                        current_step: -1, // -1 indicates this is a general question
+                        instructions: instructions,
+                        is_general_question: true
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    answerText.textContent = data.answer;
+                } else {
+                    answerText.textContent = 'Sorry, please try asking in a different way.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                answerText.textContent = 'Sorry, please try asking again.';
+            }
+        }
+
+        window.onload = async function() {
+            const recipeName = sessionStorage.getItem('recipeName');
+            if (!recipeName) {
+                console.log('No recipe name found, redirecting...');
+                window.location.href = '/recipe_input';
+                return;
+            }
+            
+            document.getElementById('recipeTitle').textContent = `Instructions for ${recipeName}`;
+            document.getElementById('loadingState').style.display = 'flex';
+            document.getElementById('instructionsContainer').classList.remove('hidden');
+            
+            // Initialize view mode buttons
+            const viewAllBtn = document.getElementById('viewAllBtn');
+            const viewStepBtn = document.getElementById('viewStepBtn');
+            
+            if (viewAllBtn && viewStepBtn) {
+                viewAllBtn.addEventListener('click', () => setViewMode('all'));
+                viewStepBtn.addEventListener('click', () => setViewMode('step'));
+            }
+            
+            try {
+                const ingredients = JSON.parse(sessionStorage.getItem('ingredients') || '[]');
+                const answers = JSON.parse(sessionStorage.getItem('answers') || '[]');
+                const storedInstructions = sessionStorage.getItem('currentInstructions');
+                const fromHome = sessionStorage.getItem('fromHome') === 'true';
+                
+                if (!Array.isArray(ingredients) || ingredients.length === 0) {
+                    throw new Error('No ingredients found. Please start over.');
+                }
+
+                let data;
+                
+                // Only generate new instructions if we don't have any stored or if we're coming from home
+                if (!storedInstructions || fromHome) {
+                    const response = await fetch('/api/generate_instructions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            recipe_name: recipeName,
+                            ingredients,
+                            answers
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error('Failed to generate instructions. Server returned: ' + response.status);
+                    }
+                    
+                    data = await response.json();
+                    
+                    if (data.status === 'success' && Array.isArray(data.instructions) && data.instructions.length > 0) {
+                        // Store the new instructions
+                        sessionStorage.setItem('currentInstructions', JSON.stringify(data.instructions));
+                        // Reset the fromHome flag
+                        sessionStorage.setItem('fromHome', 'false');
+                    } else {
+                        throw new Error(data.message || 'Invalid response from server');
+                    }
+                } else {
+                    // Use the stored instructions
+                    data = {
+                        status: 'success',
+                        instructions: JSON.parse(storedInstructions)
+                    };
+                }
+                
+                if (data.status === 'success' && Array.isArray(data.instructions) && data.instructions.length > 0) {
+                    instructions = data.instructions;
+                    document.getElementById('loadingState').style.display = 'none';
+                    document.getElementById('instructionsContainer').style.display = 'block';
+                    setViewMode('step');
+                    renderIngredients(ingredients);
+                    
+                    // Extract and render equipment from instructions
+                    const equipment = extractEquipmentFromInstructions(instructions);
+                    renderEquipment(equipment);
+                } else {
+                    throw new Error(data.message || 'Invalid response from server');
+                }
+            } catch (error) {
+                console.error('Error in window.onload:', error);
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('instructionsContainer').style.display = 'block';
+                document.getElementById('instructionSteps').innerHTML = `
+                    <div class="card">
+                        <p class="text-white opacity-90">${error.message || 'An error occurred while loading instructions. Please try again.'}</p>
+                        <button onclick="window.location.href = '/recipe_input'" class="btn-outline mt-4">
+                            Start Over
+                        </button>
+                    </div>
+                `;
+            }
+        };
+
+        function extractEquipmentFromInstructions(instructions) {
+            const equipmentMentioned = new Set();
+            const commonEquipment = [
+                'pan', 'pot', 'skillet', 'bowl', 'knife', 'cutting board', 'spoon', 
+                'spatula', 'whisk', 'measuring cups', 'measuring spoons', 'baking sheet',
+                'oven', 'stove', 'grill', 'colander', 'strainer', 'tongs'
+            ];
+            
+            // Extract equipment from instruction steps
+            instructions.forEach(step => {
+                if (!step.action) return;
+                const stepText = step.action.toLowerCase();
+                
+                commonEquipment.forEach(item => {
+                    if (stepText.includes(item)) {
+                        equipmentMentioned.add(item.charAt(0).toUpperCase() + item.slice(1));
+                    }
+                });
+            });
+            
+            return Array.from(equipmentMentioned);
+        }
+
+        function toggleVoiceAssistant() {
+            const micButton = document.getElementById('micButton');
+            const micText = document.getElementById('micText');
+            const micIcon = document.getElementById('micIcon');
+            
+            if (!window.chefAssistant.isListening) {
+                window.chefAssistant.startListening();
+                micButton.classList.add('active');
+                micText.textContent = 'Stop AI Chef';
+                micIcon.style.color = '#2980b9';
+            } else {
+                window.chefAssistant.stopListening();
+                micButton.classList.remove('active');
+                micText.textContent = 'Talk to AI Chef';
+                micIcon.style.color = 'currentColor';
+            }
+        }
+
+        // Initialize the chef assistant when instructions are loaded
+        window.addEventListener('load', () => {
+            if (!window.chefAssistant) {
+                window.chefAssistant = new ChefAssistant();
+            }
+            if (instructions.length > 0) {
+                window.chefAssistant.initialize({
+                    instructions: instructions,
+                    currentStep: currentStep
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

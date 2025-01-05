@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredients - SmartCook AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-1: #1e2a3a;
+            --bg-gradient-2: #2c3e50;
+            --bg-gradient-3: #2980b9;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(
+                135deg,
+                var(--bg-gradient-1) 0%,
+                var(--bg-gradient-2) 25%,
+                var(--bg-gradient-3) 75%
+            );
+            min-height: 100vh;
+            color: #f0f0f0;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Add a wrapper for the background effects */
+        .bg-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .bg-wrapper::before,
+        .bg-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 150vmax;
+            height: 150vmax;
+            top: 50%;
+            left: 50%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(41, 128, 185, 0.1) 45%,
+                rgba(41, 128, 185, 0.1) 50%,
+                transparent 55%
+            );
+            transform: translate(-50%, -50%);
+            animation: flowStream 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .bg-wrapper::after {
+            animation: flowStream 15s linear infinite reverse;
+            opacity: 0.5;
+        }
+
+        @keyframes flowStream {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: rgba(41, 128, 185, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 24px;
+            padding: 1.5rem !important;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .input-field {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            padding: 1rem !important;
+            border-radius: 16px;
+            width: 100%;
+            letter-spacing: 0.02em;
+        }
+
+        .input-field:focus {
+            background: rgba(41, 128, 185, 0.15);
+            border-color: rgba(41, 128, 185, 0.5);
+            box-shadow: 0 0 40px rgba(41, 128, 185, 0.25);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+        .btn-outline {
+            font-family: 'Playfair Display', serif;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(41, 128, 185, 0.25);
+            text-shadow: 0 0 10px rgba(41, 128, 185, 0.3);
+            box-shadow: 0 0 25px rgba(41, 128, 185, 0.2),
+                       0 0 0 2px rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            border-radius: 16px;
+            padding: 1.25rem 2.5rem;
+            font-size: 1.2rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(41, 128, 185, 0.35);
+            border-color: rgba(255, 255, 255, 1);
+            color: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 50px rgba(41, 128, 185, 0.35),
+                       0 0 0 2px rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .title-gradient {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(255, 255, 255, 0.98) 30%,
+                rgba(235, 245, 255, 0.96) 50%,
+                rgba(215, 235, 255, 0.94) 70%,
+                rgba(195, 225, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .subtitle-glow {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to right,
+                rgba(255, 255, 255, 0.98) 0%,
+                rgba(190, 225, 255, 0.95) 50%,
+                rgba(145, 205, 255, 0.92) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            font-size: 1.8rem;
+        }
+
+        .edit-btn {
+            font-family: 'Playfair Display', serif;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 10px rgba(41, 128, 185, 0.3);
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .edit-btn:hover {
+            color: rgba(255, 255, 255, 1);
+            text-shadow: 0 0 15px rgba(41, 128, 185, 0.5);
+        }
+
+        .remove-btn {
+            font-family: 'Playfair Display', serif;
+            color: rgba(255, 107, 107, 0.9);
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .remove-btn:hover {
+            color: rgba(255, 107, 107, 1);
+            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+        }
+
+        .loading-spinner {
+            border-color: rgba(41, 128, 185, 0.3);
+            border-top-color: rgba(41, 128, 185, 0.9);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+    <div class="bg-wrapper"></div>
+    <!-- Home Button -->
+    <div class="absolute top-8 left-4">
+        <a href="/" class="btn-outline px-4 py-2 rounded-lg transition duration-300">
+            Home
+        </a>
+    </div>
+
+    <div class="container mx-auto px-6 py-12">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-bold mb-6 title-gradient" style="padding-bottom: 0.25rem">Ingredients</h1>
+            <p id="recipeTitle" class="subtitle-glow">Ingredients for 20 chickens</p>
+        </header>
+
+        <div class="max-w-3xl mx-auto">
+            <div id="loadingState" class="text-center py-8">
+                <div class="loading-spinner animate-spin rounded-full h-12 w-12 border-4 mx-auto mb-4"></div>
+                <p class="subtitle-glow text-xl">Generating ingredient suggestions...</p>
+            </div>
+
+            <div id="ingredientsList" class="hidden space-y-4">
+                <!-- Ingredients will be dynamically added here -->
+            </div>
+
+            <div class="mt-8">
+                <div class="flex items-center gap-4">
+                    <input type="text" 
+                           id="newIngredient" 
+                           class="flex-1 input-field"
+                           placeholder="Add new ingredient">
+                    <button onclick="addIngredient()" 
+                            class="btn-outline whitespace-nowrap">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-between mt-12">
+                <a href="/recipe_input" class="btn-outline">
+                    Back
+                </a>
+                <button onclick="proceedToQuestions()" 
+                        class="btn-outline">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ingredients = [];
+
+        window.onload = async function() {
+            const recipeName = sessionStorage.getItem('recipeName');
+            if (!recipeName) {
+                window.location.href = '/recipe_input';
+                return;
+            }
+            
+            document.getElementById('recipeTitle').textContent = `Ingredients for ${recipeName}`;
+            
+            // First, get the recipe quantity from the name
+            const recipeNameParts = recipeName.split(' ');
+            const hasQuantity = recipeNameParts[0].match(/^\d+$/);
+            const recipeQuantity = hasQuantity ? parseInt(recipeNameParts[0]) : 1;
+            const mainProtein = hasQuantity ? recipeNameParts.slice(1).join(' ') : recipeName;
+            
+            // Always fetch fresh ingredients for the recipe
+            try {
+                const response = await fetch('/api/generate_ingredients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        recipe_name: recipeName,
+                        quantity: recipeQuantity 
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.ingredients) {
+                    // Clean up the recipe name for comparison
+                    const cleanRecipeName = mainProtein.toLowerCase().replace(/s$/, ''); // Remove trailing 's'
+                    
+                    // Filter out substitutions and tips, only keep actual ingredients
+                    ingredients = data.ingredients
+                        .filter(ing => {
+                            const lowerIng = typeof ing === 'string' ? ing.toLowerCase() : (ing.text || '').toLowerCase();
+                            return !lowerIng.includes('optional:') && 
+                                   !lowerIng.includes('substitution') &&
+                                   !lowerIng.includes('for ') &&
+                                   !lowerIng.includes('or you can') &&
+                                   !lowerIng.startsWith('for') &&
+                                   !lowerIng.includes('you will need') &&
+                                   !lowerIng.includes(cleanRecipeName); // Filter out recipe name
+                        })
+                        .map(ing => {
+                            const ingText = typeof ing === 'string' ? ing : ing.text || '';
+                            // Remove any numbering prefixes
+                            return ingText.replace(/^\d+\s*-\s*/, '');
+                        })
+                        .filter(ing => ing && ing.trim() !== ''); // Remove empty entries
+                    
+                    // Store the ingredients
+                    sessionStorage.setItem('storedIngredients', JSON.stringify(ingredients));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('ingredientsList').classList.remove('hidden');
+                renderIngredients();
+            }
+        };
+
+        // Update storage when ingredients change
+        function updateStorage() {
+            sessionStorage.setItem('storedIngredients', JSON.stringify(ingredients));
+        }
+
+        function renderIngredients() {
+            const list = document.getElementById('ingredientsList');
+            list.innerHTML = ingredients.map((ingredient, index) => {
+                const ingText = typeof ingredient === 'string' ? ingredient : ingredient.text || '';
+                return `
+                    <div class="card flex items-center justify-between p-4">
+                        <span class="flex-1 font-playfair text-2xl font-bold">
+                            ${ingText}
+                        </span>
+                        <div class="flex items-center space-x-6">
+                            <button onclick="editQuantity(${index})" 
+                                    class="edit-btn transition duration-300">
+                                Edit Quantity
+                            </button>
+                            <button onclick="removeIngredient(${index})" 
+                                    class="remove-btn transition duration-300">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addIngredient() {
+            const input = document.getElementById('newIngredient');
+            const ingredient = input.value.trim();
+            if (ingredient) {
+                ingredients.push(ingredient);
+                renderIngredients();
+                updateStorage();
+                input.value = '';
+            }
+        }
+
+        function removeIngredient(index) {
+            ingredients.splice(index, 1);
+            renderIngredients();
+            updateStorage();
+        }
+
+        function editQuantity(index) {
+            const newQuantity = prompt('Enter new quantity:', '');
+            if (newQuantity !== null) {
+                const ingredient = ingredients[index];
+                const parts = ingredient.split(' ');
+                if (!isNaN(parts[0])) {
+                    parts[0] = newQuantity;
+                    ingredients[index] = parts.join(' ');
+                    renderIngredients();
+                    updateStorage();
+                }
+            }
+        }
+
+        function proceedToQuestions() {
+            sessionStorage.setItem('ingredients', JSON.stringify(ingredients));
+            window.location.href = '/questions';
+        }
+    </script>
+</body>
+</html> 
